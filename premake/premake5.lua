@@ -40,6 +40,7 @@ project "ProgramPraktyki"
         "../vendor/GLEW/include",
         "../vendor/GLM/include",
         "../vendor/SFML/include",
+		        "../vendor/SDL_gfx",
     }
    
     libdirs{
@@ -83,6 +84,10 @@ project "ProgramPraktyki"
 
 	files{
 		"../main.cpp",
+		"../vendor/SDL_gfx/SDL2_framerate.c",
+		"../vendor/SDL_gfx/SDL2_gfxPrimitives.c",
+		"../vendor/SDL_gfx/SDL2_imageFilter.c",
+		"../vendor/SDL_gfx/SDL2_rotozoom.c",
 	}
 
 	defines "SFML_STATIC"

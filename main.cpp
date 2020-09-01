@@ -32,6 +32,8 @@
 #include <android/log.h> //__android_log_print(ANDROID_LOG_VERBOSE, "ProgramPraktyki", "Example number log: %d", number);
 #include <jni.h>
 #endif
+#include <SDL2_gfxPrimitives.h>
+
 
 // NOTE: Remember to uncomment it on every release
 //#define RELEASE
@@ -124,6 +126,127 @@ int eventWatch(void* userdata, SDL_Event* event)
 	return 0;
 }
 
+
+int
+SDL_RenderDrawCircle(SDL_Renderer* renderer, int x, int y, int radius)
+{
+	int offsetx, offsety, d;
+	int status;
+
+
+	offsetx = 0;
+	offsety = radius;
+	d = radius - 1;
+	status = 0;
+
+	while (offsety >= offsetx) {
+		status += SDL_RenderDrawPoint(renderer, x + offsetx, y + offsety);
+		status += SDL_RenderDrawPoint(renderer, x + offsety, y + offsetx);
+		status += SDL_RenderDrawPoint(renderer, x - offsetx, y + offsety);
+		status += SDL_RenderDrawPoint(renderer, x - offsety, y + offsetx);
+		status += SDL_RenderDrawPoint(renderer, x + offsetx, y - offsety);
+		status += SDL_RenderDrawPoint(renderer, x + offsety, y - offsetx);
+		status += SDL_RenderDrawPoint(renderer, x - offsetx, y - offsety);
+		status += SDL_RenderDrawPoint(renderer, x - offsety, y - offsetx);
+
+		if (status < 0) {
+			status = -1;
+			break;
+		}
+
+		if (d >= 2 * offsetx) {
+			d -= 2 * offsetx + 1;
+			offsetx += 1;
+		}
+		else if (d < 2 * (radius - offsety)) {
+			d += 2 * offsety - 1;
+			offsety -= 1;
+		}
+		else {
+			d += 2 * (offsety - offsetx - 1);
+			offsety -= 1;
+			offsetx += 1;
+		}
+	}
+
+	return status;
+}
+
+
+int
+SDL_RenderFillCircle(SDL_Renderer* renderer, int x, int y, int radius)
+{
+	int offsetx, offsety, d;
+	int status;
+
+
+	offsetx = 0;
+	offsety = radius;
+	d = radius - 1;
+	status = 0;
+
+	while (offsety >= offsetx) {
+
+		status += SDL_RenderDrawLine(renderer, x - offsety, y + offsetx,
+			x + offsety, y + offsetx);
+		status += SDL_RenderDrawLine(renderer, x - offsetx, y + offsety,
+			x + offsetx, y + offsety);
+		status += SDL_RenderDrawLine(renderer, x - offsetx, y - offsety,
+			x + offsetx, y - offsety);
+		status += SDL_RenderDrawLine(renderer, x - offsety, y - offsetx,
+			x + offsety, y - offsetx);
+
+		if (status < 0) {
+			status = -1;
+			break;
+		}
+
+		if (d >= 2 * offsetx) {
+			d -= 2 * offsetx + 1;
+			offsetx += 1;
+		}
+		else if (d < 2 * (radius - offsety)) {
+			d += 2 * offsety - 1;
+			offsety -= 1;
+		}
+		else {
+			d += 2 * (offsety - offsetx - 1);
+			offsety -= 1;
+			offsetx += 1;
+		}
+	}
+
+	return status;
+}
+
+int x = 50;
+int y = 50;
+
+Uint32 my_callbackfunc(Uint32 interval, void* param)
+{
+#if 0
+	SDL_Event event;
+	SDL_UserEvent userevent;
+
+	/* In this example, our callback pushes an SDL_USEREVENT event
+	into the queue, and causes our callback to be called again at the
+	same interval: */
+
+	userevent.type = SDL_USEREVENT;
+	userevent.code = 0;
+	userevent.data1 = NULL;
+	userevent.data2 = NULL;
+
+	event.type = SDL_USEREVENT;
+	event.user = userevent;
+
+	SDL_PushEvent(&event);
+#endif
+//	std::cout << "Hello World!" << std::endl;
+	x++;
+	return(interval);
+}
+
 int main(int argc, char* argv[])
 {
 	std::srand(std::time(0));
@@ -140,6 +263,8 @@ int main(int argc, char* argv[])
 	SDL_RenderSetScale(renderer, w / (float)windowWidth, h / (float)windowHeight);
 	SDL_AddEventWatch(eventWatch, 0);
 	bool running = true;
+	SDL_AddTimer(20, my_callbackfunc, 0);
+
 	while (running) {
 		SDL_Event event;
 		while (SDL_PollEvent(&event)) {
@@ -173,6 +298,10 @@ int main(int argc, char* argv[])
 		}
 		SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
 		SDL_RenderClear(renderer);
+		// timer co 20 ms
+		SDL_SetRenderDrawColor(renderer, 0, 255, 0, 0);
+		SDL_RenderFillCircle(renderer, x, y, 10);
+		//SDL_RenderDrawLine(renderer, 50, 50, 100, 50);
 		SDL_RenderPresent(renderer);
 	}
 	// TODO: On mobile remember to use eventWatch function (it doesn't reach this code when terminating)

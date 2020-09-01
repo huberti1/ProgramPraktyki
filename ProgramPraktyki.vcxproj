@@ -58,7 +58,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>SFML_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>vendor\SDL\include;vendor\SDL_image\include;vendor\SDL_ttf\include;vendor\SDL_mixer\include;vendor\SDL_net\include;vendor\SDL_gpu\include;vendor\GLEW\include;vendor\GLM\include;vendor\SFML\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>vendor\SDL\include;vendor\SDL_image\include;vendor\SDL_ttf\include;vendor\SDL_mixer\include;vendor\SDL_net\include;vendor\SDL_gpu\include;vendor\GLEW\include;vendor\GLM\include;vendor\SFML\include;vendor\SDL_gfx;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -76,7 +76,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>SFML_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>vendor\SDL\include;vendor\SDL_image\include;vendor\SDL_ttf\include;vendor\SDL_mixer\include;vendor\SDL_net\include;vendor\SDL_gpu\include;vendor\GLEW\include;vendor\GLM\include;vendor\SFML\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>vendor\SDL\include;vendor\SDL_image\include;vendor\SDL_ttf\include;vendor\SDL_mixer\include;vendor\SDL_net\include;vendor\SDL_gpu\include;vendor\GLEW\include;vendor\GLM\include;vendor\SFML\include;vendor\SDL_gfx;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -95,6 +95,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="vendor\SDL_gfx\SDL2_framerate.c" />
+    <ClCompile Include="vendor\SDL_gfx\SDL2_gfxPrimitives.c" />
+    <ClCompile Include="vendor\SDL_gfx\SDL2_imageFilter.c" />
+    <ClCompile Include="vendor\SDL_gfx\SDL2_rotozoom.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
