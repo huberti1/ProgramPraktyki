@@ -1,0 +1,7 @@
+﻿  main.cpp
+C:\home\dev\ProgramPraktyki\main.cpp(71,7): warning C4244:  '=': conversion from 'int' to 'float', possible loss of data
+C:\home\dev\ProgramPraktyki\main.cpp(72,7): warning C4244:  '=': conversion from 'int' to 'float', possible loss of data
+C:\home\dev\ProgramPraktyki\main.cpp(252,22): warning C4244:  'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+C:\home\dev\ProgramPraktyki\main.cpp(293,33): warning C4244:  '=': conversion from 'float' to 'int', possible loss of data
+C:\home\dev\ProgramPraktyki\main.cpp(294,33): warning C4244:  '=': conversion from 'float' to 'int', possible loss of data
+  ProgramPraktyki.vcxproj -> C:\home\dev\ProgramPraktyki\bin\Debug_x86\ProgramPraktyki.exe
