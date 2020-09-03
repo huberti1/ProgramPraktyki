@@ -1,0 +1,676 @@
+Performing C SOURCE FILE Test HAVE_BUILTIN_BSWAP16 failed with the following output:
+Change Dir: C:/home/dev/ProgramPraktyki/vendor/SDL_image/external/libwebp-1.0.2/out/build/x64-Debug/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/ninja.exe cmTC_87d9d 
+[1/2] Building C object CMakeFiles\cmTC_87d9d.dir\src.c.obj
+C:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(3): warning C4013: '__builtin_bswap16' undefined; assuming extern returning int
+[2/2] Linking C executable cmTC_87d9d.exe
+FAILED: cmTC_87d9d.exe 
+cmd.exe /C "cd . && "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E vs_link_exe --intdir=CMakeFiles\cmTC_87d9d.dir --rc=C:\PROGRA~2\WI3CF2~1\10\bin\100183~1.0\x64\rc.exe --mt=C:\PROGRA~2\WI3CF2~1\10\bin\100183~1.0\x64\mt.exe --manifests  -- C:\PROGRA~2\MICROS~1\2019\COMMUN~1\VC\Tools\MSVC\1422~1.279\bin\Hostx64\x64\link.exe /nologo CMakeFiles\cmTC_87d9d.dir\src.c.obj  /out:cmTC_87d9d.exe /implib:cmTC_87d9d.lib /pdb:cmTC_87d9d.pdb /version:0.0  /machine:x64  /debug /INCREMENTAL /subsystem:console  kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib && cd ."
+LINK Pass 1: command "C:\PROGRA~2\MICROS~1\2019\COMMUN~1\VC\Tools\MSVC\1422~1.279\bin\Hostx64\x64\link.exe /nologo CMakeFiles\cmTC_87d9d.dir\src.c.obj /out:cmTC_87d9d.exe /implib:cmTC_87d9d.lib /pdb:cmTC_87d9d.pdb /version:0.0 /machine:x64 /debug /INCREMENTAL /subsystem:console kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTFILE:CMakeFiles\cmTC_87d9d.dir/intermediate.manifest CMakeFiles\cmTC_87d9d.dir/manifest.res" failed (exit code 1120) with the following output:
+src.c.obj : error LNK2019: unresolved external symbol __builtin_bswap16 referenced in function main
+cmTC_87d9d.exe : fatal error LNK1120: 1 unresolved externals
+ninja: build stopped: subcommand failed.
+
+Source file was:
+
+    int main(void) {
+      (void)__builtin_bswap16(0);
+      return 0;
+    }
+  
+Performing C SOURCE FILE Test HAVE_BUILTIN_BSWAP32 failed with the following output:
+Change Dir: C:/home/dev/ProgramPraktyki/vendor/SDL_image/external/libwebp-1.0.2/out/build/x64-Debug/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/ninja.exe cmTC_93d45 
+[1/2] Building C object CMakeFiles\cmTC_93d45.dir\src.c.obj
+C:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(3): warning C4013: '__builtin_bswap32' undefined; assuming extern returning int
+[2/2] Linking C executable cmTC_93d45.exe
+FAILED: cmTC_93d45.exe 
+cmd.exe /C "cd . && "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E vs_link_exe --intdir=CMakeFiles\cmTC_93d45.dir --rc=C:\PROGRA~2\WI3CF2~1\10\bin\100183~1.0\x64\rc.exe --mt=C:\PROGRA~2\WI3CF2~1\10\bin\100183~1.0\x64\mt.exe --manifests  -- C:\PROGRA~2\MICROS~1\2019\COMMUN~1\VC\Tools\MSVC\1422~1.279\bin\Hostx64\x64\link.exe /nologo CMakeFiles\cmTC_93d45.dir\src.c.obj  /out:cmTC_93d45.exe /implib:cmTC_93d45.lib /pdb:cmTC_93d45.pdb /version:0.0  /machine:x64  /debug /INCREMENTAL /subsystem:console  kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib && cd ."
+LINK Pass 1: command "C:\PROGRA~2\MICROS~1\2019\COMMUN~1\VC\Tools\MSVC\1422~1.279\bin\Hostx64\x64\link.exe /nologo CMakeFiles\cmTC_93d45.dir\src.c.obj /out:cmTC_93d45.exe /implib:cmTC_93d45.lib /pdb:cmTC_93d45.pdb /version:0.0 /machine:x64 /debug /INCREMENTAL /subsystem:console kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTFILE:CMakeFiles\cmTC_93d45.dir/intermediate.manifest CMakeFiles\cmTC_93d45.dir/manifest.res" failed (exit code 1120) with the following output:
+src.c.obj : error LNK2019: unresolved external symbol __builtin_bswap32 referenced in function main
+cmTC_93d45.exe : fatal error LNK1120: 1 unresolved externals
+ninja: build stopped: subcommand failed.
+
+Source file was:
+
+    int main(void) {
+      (void)__builtin_bswap32(0);
+      return 0;
+    }
+  
+Performing C SOURCE FILE Test HAVE_BUILTIN_BSWAP64 failed with the following output:
+Change Dir: C:/home/dev/ProgramPraktyki/vendor/SDL_image/external/libwebp-1.0.2/out/build/x64-Debug/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/ninja.exe cmTC_8ddda 
+[1/2] Building C object CMakeFiles\cmTC_8ddda.dir\src.c.obj
+C:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(3): warning C4013: '__builtin_bswap64' undefined; assuming extern returning int
+[2/2] Linking C executable cmTC_8ddda.exe
+FAILED: cmTC_8ddda.exe 
+cmd.exe /C "cd . && "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E vs_link_exe --intdir=CMakeFiles\cmTC_8ddda.dir --rc=C:\PROGRA~2\WI3CF2~1\10\bin\100183~1.0\x64\rc.exe --mt=C:\PROGRA~2\WI3CF2~1\10\bin\100183~1.0\x64\mt.exe --manifests  -- C:\PROGRA~2\MICROS~1\2019\COMMUN~1\VC\Tools\MSVC\1422~1.279\bin\Hostx64\x64\link.exe /nologo CMakeFiles\cmTC_8ddda.dir\src.c.obj  /out:cmTC_8ddda.exe /implib:cmTC_8ddda.lib /pdb:cmTC_8ddda.pdb /version:0.0  /machine:x64  /debug /INCREMENTAL /subsystem:console  kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib && cd ."
+LINK Pass 1: command "C:\PROGRA~2\MICROS~1\2019\COMMUN~1\VC\Tools\MSVC\1422~1.279\bin\Hostx64\x64\link.exe /nologo CMakeFiles\cmTC_8ddda.dir\src.c.obj /out:cmTC_8ddda.exe /implib:cmTC_8ddda.lib /pdb:cmTC_8ddda.pdb /version:0.0 /machine:x64 /debug /INCREMENTAL /subsystem:console kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTFILE:CMakeFiles\cmTC_8ddda.dir/intermediate.manifest CMakeFiles\cmTC_8ddda.dir/manifest.res" failed (exit code 1120) with the following output:
+src.c.obj : error LNK2019: unresolved external symbol __builtin_bswap64 referenced in function main
+cmTC_8ddda.exe : fatal error LNK1120: 1 unresolved externals
+ninja: build stopped: subcommand failed.
+
+Source file was:
+
+    int main(void) {
+      (void)__builtin_bswap64(0);
+      return 0;
+    }
+  
+Determining if the include file pthread.h exists failed with the following output:
+Change Dir: C:/home/dev/ProgramPraktyki/vendor/SDL_image/external/libwebp-1.0.2/out/build/x64-Debug/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/ninja.exe cmTC_6312f 
+[1/2] Building C object CMakeFiles\cmTC_6312f.dir\CheckIncludeFile.c.obj
+FAILED: CMakeFiles/cmTC_6312f.dir/CheckIncludeFile.c.obj 
+C:\PROGRA~2\MICROS~1\2019\COMMUN~1\VC\Tools\MSVC\1422~1.279\bin\HostX64\x64\cl.exe  /nologo   /DWIN32 /D_WINDOWS /W3  /MDd /ZI /Ob0 /Od /RTC1 /JMC /showIncludes /FoCMakeFiles\cmTC_6312f.dir\CheckIncludeFile.c.obj /FdCMakeFiles\cmTC_6312f.dir\ /FS -c CheckIncludeFile.c
+C:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\CheckIncludeFile.c(1): fatal error C1083: Cannot open include file: 'pthread.h': No such file or directory
+ninja: build stopped: subcommand failed.
+
+
+Performing C SOURCE FILE Test HAVE_PTHREAD_PRIO_INHERIT failed with the following output:
+Change Dir: C:/home/dev/ProgramPraktyki/vendor/SDL_image/external/libwebp-1.0.2/out/build/x64-Debug/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/ninja.exe cmTC_2ea4e 
+[1/2] Building C object CMakeFiles\cmTC_2ea4e.dir\src.c.obj
+FAILED: CMakeFiles/cmTC_2ea4e.dir/src.c.obj 
+C:\PROGRA~2\MICROS~1\2019\COMMUN~1\VC\Tools\MSVC\1422~1.279\bin\HostX64\x64\cl.exe  /nologo   /DWIN32 /D_WINDOWS /W3 -DHAVE_PTHREAD_PRIO_INHERIT /MDd /ZI /Ob0 /Od /RTC1 /JMC /showIncludes /FoCMakeFiles\cmTC_2ea4e.dir\src.c.obj /FdCMakeFiles\cmTC_2ea4e.dir\ /FS -c src.c
+C:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(2): fatal error C1083: Cannot open include file: 'pthread.h': No such file or directory
+ninja: build stopped: subcommand failed.
+
+Source file was:
+
+        #include <pthread.h>
+        int main (void) {
+          int attr = HAVE_PTHREAD_PRIO_INHERIT;
+          return attr;
+        }
+      
+Performing C SOURCE FILE Test PTHREAD_CREATE_UNDETACHED failed with the following output:
+Change Dir: C:/home/dev/ProgramPraktyki/vendor/SDL_image/external/libwebp-1.0.2/out/build/x64-Debug/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/ninja.exe cmTC_73aa0 
+[1/2] Building C object CMakeFiles\cmTC_73aa0.dir\src.c.obj
+FAILED: CMakeFiles/cmTC_73aa0.dir/src.c.obj 
+C:\PROGRA~2\MICROS~1\2019\COMMUN~1\VC\Tools\MSVC\1422~1.279\bin\HostX64\x64\cl.exe  /nologo   /DWIN32 /D_WINDOWS /W3 -DPTHREAD_CREATE_UNDETACHED /MDd /ZI /Ob0 /Od /RTC1 /JMC /showIncludes /FoCMakeFiles\cmTC_73aa0.dir\src.c.obj /FdCMakeFiles\cmTC_73aa0.dir\ /FS -c src.c
+C:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(2): fatal error C1083: Cannot open include file: 'pthread.h': No such file or directory
+ninja: build stopped: subcommand failed.
+
+Source file was:
+
+        #include <pthread.h>
+        int main (void) {
+          int attr = PTHREAD_CREATE_UNDETACHED;
+          return attr;
+        }
+      
+Determining if files dlfcn.h exist failed with the following output:
+Change Dir: C:/home/dev/ProgramPraktyki/vendor/SDL_image/external/libwebp-1.0.2/out/build/x64-Debug/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/ninja.exe cmTC_d5260 
+[1/2] Building C object CMakeFiles\cmTC_d5260.dir\HAVE_DLFCN_H.c.obj
+FAILED: CMakeFiles/cmTC_d5260.dir/HAVE_DLFCN_H.c.obj 
+C:\PROGRA~2\MICROS~1\2019\COMMUN~1\VC\Tools\MSVC\1422~1.279\bin\HostX64\x64\cl.exe  /nologo   /DWIN32 /D_WINDOWS /W3  /MDd /ZI /Ob0 /Od /RTC1 /JMC /showIncludes /FoCMakeFiles\cmTC_d5260.dir\HAVE_DLFCN_H.c.obj /FdCMakeFiles\cmTC_d5260.dir\ /FS -c C:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CheckIncludeFiles\HAVE_DLFCN_H.c
+C:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CheckIncludeFiles\HAVE_DLFCN_H.c(2): fatal error C1083: Cannot open include file: 'dlfcn.h': No such file or directory
+ninja: build stopped: subcommand failed.
+
+Source:
+/* */
+#include <dlfcn.h>
+
+
+int main(void){return 0;}
+
+Determining if files GLUT/glut.h exist failed with the following output:
+Change Dir: C:/home/dev/ProgramPraktyki/vendor/SDL_image/external/libwebp-1.0.2/out/build/x64-Debug/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/ninja.exe cmTC_25015 
+[1/2] Building C object CMakeFiles\cmTC_25015.dir\HAVE_GLUT_GLUT_H.c.obj
+FAILED: CMakeFiles/cmTC_25015.dir/HAVE_GLUT_GLUT_H.c.obj 
+C:\PROGRA~2\MICROS~1\2019\COMMUN~1\VC\Tools\MSVC\1422~1.279\bin\HostX64\x64\cl.exe  /nologo   /DWIN32 /D_WINDOWS /W3  /MDd /ZI /Ob0 /Od /RTC1 /JMC /showIncludes /FoCMakeFiles\cmTC_25015.dir\HAVE_GLUT_GLUT_H.c.obj /FdCMakeFiles\cmTC_25015.dir\ /FS -c C:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CheckIncludeFiles\HAVE_GLUT_GLUT_H.c
+C:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CheckIncludeFiles\HAVE_GLUT_GLUT_H.c(2): fatal error C1083: Cannot open include file: 'GLUT/glut.h': No such file or directory
+ninja: build stopped: subcommand failed.
+
+Source:
+/* */
+#include <GLUT/glut.h>
+
+
+int main(void){return 0;}
+
+Determining if files GL/glut.h exist failed with the following output:
+Change Dir: C:/home/dev/ProgramPraktyki/vendor/SDL_image/external/libwebp-1.0.2/out/build/x64-Debug/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/ninja.exe cmTC_a96e1 
+[1/2] Building C object CMakeFiles\cmTC_a96e1.dir\HAVE_GL_GLUT_H.c.obj
+FAILED: CMakeFiles/cmTC_a96e1.dir/HAVE_GL_GLUT_H.c.obj 
+C:\PROGRA~2\MICROS~1\2019\COMMUN~1\VC\Tools\MSVC\1422~1.279\bin\HostX64\x64\cl.exe  /nologo   /DWIN32 /D_WINDOWS /W3  /MDd /ZI /Ob0 /Od /RTC1 /JMC /showIncludes /FoCMakeFiles\cmTC_a96e1.dir\HAVE_GL_GLUT_H.c.obj /FdCMakeFiles\cmTC_a96e1.dir\ /FS -c C:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CheckIncludeFiles\HAVE_GL_GLUT_H.c
+C:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CheckIncludeFiles\HAVE_GL_GLUT_H.c(2): fatal error C1083: Cannot open include file: 'GL/glut.h': No such file or directory
+ninja: build stopped: subcommand failed.
+
+Source:
+/* */
+#include <GL/glut.h>
+
+
+int main(void){return 0;}
+
+Determining if files OpenGL/glut.h exist failed with the following output:
+Change Dir: C:/home/dev/ProgramPraktyki/vendor/SDL_image/external/libwebp-1.0.2/out/build/x64-Debug/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/ninja.exe cmTC_7788e 
+[1/2] Building C object CMakeFiles\cmTC_7788e.dir\HAVE_OPENGL_GLUT_H.c.obj
+FAILED: CMakeFiles/cmTC_7788e.dir/HAVE_OPENGL_GLUT_H.c.obj 
+C:\PROGRA~2\MICROS~1\2019\COMMUN~1\VC\Tools\MSVC\1422~1.279\bin\HostX64\x64\cl.exe  /nologo   /DWIN32 /D_WINDOWS /W3  /MDd /ZI /Ob0 /Od /RTC1 /JMC /showIncludes /FoCMakeFiles\cmTC_7788e.dir\HAVE_OPENGL_GLUT_H.c.obj /FdCMakeFiles\cmTC_7788e.dir\ /FS -c C:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CheckIncludeFiles\HAVE_OPENGL_GLUT_H.c
+C:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CheckIncludeFiles\HAVE_OPENGL_GLUT_H.c(2): fatal error C1083: Cannot open include file: 'OpenGL/glut.h': No such file or directory
+ninja: build stopped: subcommand failed.
+
+Source:
+/* */
+#include <OpenGL/glut.h>
+
+
+int main(void){return 0;}
+
+Determining if files strings.h exist failed with the following output:
+Change Dir: C:/home/dev/ProgramPraktyki/vendor/SDL_image/external/libwebp-1.0.2/out/build/x64-Debug/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/ninja.exe cmTC_fca8d 
+[1/2] Building C object CMakeFiles\cmTC_fca8d.dir\HAVE_STRINGS_H.c.obj
+FAILED: CMakeFiles/cmTC_fca8d.dir/HAVE_STRINGS_H.c.obj 
+C:\PROGRA~2\MICROS~1\2019\COMMUN~1\VC\Tools\MSVC\1422~1.279\bin\HostX64\x64\cl.exe  /nologo   /DWIN32 /D_WINDOWS /W3  /MDd /ZI /Ob0 /Od /RTC1 /JMC /showIncludes /FoCMakeFiles\cmTC_fca8d.dir\HAVE_STRINGS_H.c.obj /FdCMakeFiles\cmTC_fca8d.dir\ /FS -c C:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CheckIncludeFiles\HAVE_STRINGS_H.c
+C:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CheckIncludeFiles\HAVE_STRINGS_H.c(2): fatal error C1083: Cannot open include file: 'strings.h': No such file or directory
+ninja: build stopped: subcommand failed.
+
+Source:
+/* */
+#include <strings.h>
+
+
+int main(void){return 0;}
+
+Determining if files unistd.h exist failed with the following output:
+Change Dir: C:/home/dev/ProgramPraktyki/vendor/SDL_image/external/libwebp-1.0.2/out/build/x64-Debug/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/ninja.exe cmTC_70aa6 
+[1/2] Building C object CMakeFiles\cmTC_70aa6.dir\HAVE_UNISTD_H.c.obj
+FAILED: CMakeFiles/cmTC_70aa6.dir/HAVE_UNISTD_H.c.obj 
+C:\PROGRA~2\MICROS~1\2019\COMMUN~1\VC\Tools\MSVC\1422~1.279\bin\HostX64\x64\cl.exe  /nologo   /DWIN32 /D_WINDOWS /W3  /MDd /ZI /Ob0 /Od /RTC1 /JMC /showIncludes /FoCMakeFiles\cmTC_70aa6.dir\HAVE_UNISTD_H.c.obj /FdCMakeFiles\cmTC_70aa6.dir\ /FS -c C:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CheckIncludeFiles\HAVE_UNISTD_H.c
+C:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CheckIncludeFiles\HAVE_UNISTD_H.c(2): fatal error C1083: Cannot open include file: 'unistd.h': No such file or directory
+ninja: build stopped: subcommand failed.
+
+Source:
+/* */
+#include <unistd.h>
+
+
+int main(void){return 0;}
+
+Performing C SOURCE FILE Test WEBP_HAVE_FLAG_MIPS32 failed with the following output:
+Change Dir: C:/home/dev/ProgramPraktyki/vendor/SDL_image/external/libwebp-1.0.2/out/build/x64-Debug/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/ninja.exe cmTC_c383c 
+[1/2] Building C object CMakeFiles\cmTC_c383c.dir\src.c.obj
+FAILED: CMakeFiles/cmTC_c383c.dir/src.c.obj 
+C:\PROGRA~2\MICROS~1\2019\COMMUN~1\VC\Tools\MSVC\1422~1.279\bin\HostX64\x64\cl.exe  /nologo  -IC:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2 /DWIN32 /D_WINDOWS /W3 -DWEBP_HAVE_FLAG_MIPS32 /MDd /ZI /Ob0 /Od /RTC1 /JMC /showIncludes /FoCMakeFiles\cmTC_c383c.dir\src.c.obj /FdCMakeFiles\cmTC_c383c.dir\ /FS -c src.c
+C:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2065: 'this': undeclared identifier
+C:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2146: syntax error: missing ';' before identifier 'is'
+C:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2065: 'is': undeclared identifier
+C:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2146: syntax error: missing ';' before identifier 'not'
+C:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2065: 'not': undeclared identifier
+C:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2146: syntax error: missing ';' before identifier 'valid'
+C:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2065: 'valid': undeclared identifier
+C:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2146: syntax error: missing ';' before identifier 'code'
+C:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(7): error C2065: 'code': undeclared identifier
+C:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(7): error C2143: syntax error: missing ';' before 'return'
+ninja: build stopped: subcommand failed.
+
+Source file was:
+
+      #include "C:/home/dev/ProgramPraktyki/vendor/SDL_image/external/libwebp-1.0.2/cmake/../src/dsp/dsp.h"
+      int main(void) {
+        #if !defined(WEBP_USE_MIPS32)
+        this is not valid code
+        #endif
+        return 0;
+      }
+    
+Performing C SOURCE FILE Test WEBP_HAVE_FLAG_MIPS32 failed with the following output:
+Change Dir: C:/home/dev/ProgramPraktyki/vendor/SDL_image/external/libwebp-1.0.2/out/build/x64-Debug/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/ninja.exe cmTC_0ee76 
+[1/2] Building C object CMakeFiles\cmTC_0ee76.dir\src.c.obj
+FAILED: CMakeFiles/cmTC_0ee76.dir/src.c.obj 
+C:\PROGRA~2\MICROS~1\2019\COMMUN~1\VC\Tools\MSVC\1422~1.279\bin\HostX64\x64\cl.exe  /nologo  -IC:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2 /DWIN32 /D_WINDOWS /W3 -DWEBP_HAVE_FLAG_MIPS32 /MDd /ZI /Ob0 /Od /RTC1 /JMC /showIncludes /FoCMakeFiles\cmTC_0ee76.dir\src.c.obj /FdCMakeFiles\cmTC_0ee76.dir\ /FS -c src.c
+C:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2065: 'this': undeclared identifier
+C:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2146: syntax error: missing ';' before identifier 'is'
+C:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2065: 'is': undeclared identifier
+C:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2146: syntax error: missing ';' before identifier 'not'
+C:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2065: 'not': undeclared identifier
+C:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2146: syntax error: missing ';' before identifier 'valid'
+C:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2065: 'valid': undeclared identifier
+C:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2146: syntax error: missing ';' before identifier 'code'
+C:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(7): error C2065: 'code': undeclared identifier
+C:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(7): error C2143: syntax error: missing ';' before 'return'
+ninja: build stopped: subcommand failed.
+
+Source file was:
+
+      #include "C:/home/dev/ProgramPraktyki/vendor/SDL_image/external/libwebp-1.0.2/cmake/../src/dsp/dsp.h"
+      int main(void) {
+        #if !defined(WEBP_USE_MIPS32)
+        this is not valid code
+        #endif
+        return 0;
+      }
+    
+Performing C SOURCE FILE Test WEBP_HAVE_FLAG_MIPS_DSP_R2 failed with the following output:
+Change Dir: C:/home/dev/ProgramPraktyki/vendor/SDL_image/external/libwebp-1.0.2/out/build/x64-Debug/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/ninja.exe cmTC_a2da5 
+[1/2] Building C object CMakeFiles\cmTC_a2da5.dir\src.c.obj
+FAILED: CMakeFiles/cmTC_a2da5.dir/src.c.obj 
+C:\PROGRA~2\MICROS~1\2019\COMMUN~1\VC\Tools\MSVC\1422~1.279\bin\HostX64\x64\cl.exe  /nologo  -IC:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2 /DWIN32 /D_WINDOWS /W3 -DWEBP_HAVE_FLAG_MIPS_DSP_R2 /MDd /ZI /Ob0 /Od /RTC1 /JMC /showIncludes /FoCMakeFiles\cmTC_a2da5.dir\src.c.obj /FdCMakeFiles\cmTC_a2da5.dir\ /FS -c src.c
+C:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2065: 'this': undeclared identifier
+C:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2146: syntax error: missing ';' before identifier 'is'
+C:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2065: 'is': undeclared identifier
+C:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2146: syntax error: missing ';' before identifier 'not'
+C:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2065: 'not': undeclared identifier
+C:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2146: syntax error: missing ';' before identifier 'valid'
+C:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2065: 'valid': undeclared identifier
+C:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2146: syntax error: missing ';' before identifier 'code'
+C:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(7): error C2065: 'code': undeclared identifier
+C:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(7): error C2143: syntax error: missing ';' before 'return'
+ninja: build stopped: subcommand failed.
+
+Source file was:
+
+      #include "C:/home/dev/ProgramPraktyki/vendor/SDL_image/external/libwebp-1.0.2/cmake/../src/dsp/dsp.h"
+      int main(void) {
+        #if !defined(WEBP_USE_MIPS_DSP_R2)
+        this is not valid code
+        #endif
+        return 0;
+      }
+    
+Performing C SOURCE FILE Test WEBP_HAVE_FLAG_MIPS_DSP_R2 failed with the following output:
+Change Dir: C:/home/dev/ProgramPraktyki/vendor/SDL_image/external/libwebp-1.0.2/out/build/x64-Debug/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/ninja.exe cmTC_4103a 
+[1/2] Building C object CMakeFiles\cmTC_4103a.dir\src.c.obj
+FAILED: CMakeFiles/cmTC_4103a.dir/src.c.obj 
+C:\PROGRA~2\MICROS~1\2019\COMMUN~1\VC\Tools\MSVC\1422~1.279\bin\HostX64\x64\cl.exe  /nologo  -IC:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2 /DWIN32 /D_WINDOWS /W3 -DWEBP_HAVE_FLAG_MIPS_DSP_R2 /MDd /ZI /Ob0 /Od /RTC1 /JMC /showIncludes /FoCMakeFiles\cmTC_4103a.dir\src.c.obj /FdCMakeFiles\cmTC_4103a.dir\ /FS -c src.c
+C:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2065: 'this': undeclared identifier
+C:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2146: syntax error: missing ';' before identifier 'is'
+C:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2065: 'is': undeclared identifier
+C:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2146: syntax error: missing ';' before identifier 'not'
+C:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2065: 'not': undeclared identifier
+C:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2146: syntax error: missing ';' before identifier 'valid'
+C:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2065: 'valid': undeclared identifier
+C:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2146: syntax error: missing ';' before identifier 'code'
+C:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(7): error C2065: 'code': undeclared identifier
+C:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(7): error C2143: syntax error: missing ';' before 'return'
+ninja: build stopped: subcommand failed.
+
+Source file was:
+
+      #include "C:/home/dev/ProgramPraktyki/vendor/SDL_image/external/libwebp-1.0.2/cmake/../src/dsp/dsp.h"
+      int main(void) {
+        #if !defined(WEBP_USE_MIPS_DSP_R2)
+        this is not valid code
+        #endif
+        return 0;
+      }
+    
+Performing C SOURCE FILE Test WEBP_HAVE_FLAG_NEON failed with the following output:
+Change Dir: C:/home/dev/ProgramPraktyki/vendor/SDL_image/external/libwebp-1.0.2/out/build/x64-Debug/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/ninja.exe cmTC_7366f 
+[1/2] Building C object CMakeFiles\cmTC_7366f.dir\src.c.obj
+FAILED: CMakeFiles/cmTC_7366f.dir/src.c.obj 
+C:\PROGRA~2\MICROS~1\2019\COMMUN~1\VC\Tools\MSVC\1422~1.279\bin\HostX64\x64\cl.exe  /nologo  -IC:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2 /DWIN32 /D_WINDOWS /W3 -DWEBP_HAVE_FLAG_NEON /MDd /ZI /Ob0 /Od /RTC1 /JMC /showIncludes /FoCMakeFiles\cmTC_7366f.dir\src.c.obj /FdCMakeFiles\cmTC_7366f.dir\ /FS -c src.c
+C:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2065: 'this': undeclared identifier
+C:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2146: syntax error: missing ';' before identifier 'is'
+C:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2065: 'is': undeclared identifier
+C:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2146: syntax error: missing ';' before identifier 'not'
+C:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2065: 'not': undeclared identifier
+C:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2146: syntax error: missing ';' before identifier 'valid'
+C:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2065: 'valid': undeclared identifier
+C:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2146: syntax error: missing ';' before identifier 'code'
+C:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(7): error C2065: 'code': undeclared identifier
+C:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(7): error C2143: syntax error: missing ';' before 'return'
+ninja: build stopped: subcommand failed.
+
+Source file was:
+
+      #include "C:/home/dev/ProgramPraktyki/vendor/SDL_image/external/libwebp-1.0.2/cmake/../src/dsp/dsp.h"
+      int main(void) {
+        #if !defined(WEBP_USE_NEON)
+        this is not valid code
+        #endif
+        return 0;
+      }
+    
+Performing C SOURCE FILE Test WEBP_HAVE_FLAG_NEON failed with the following output:
+Change Dir: C:/home/dev/ProgramPraktyki/vendor/SDL_image/external/libwebp-1.0.2/out/build/x64-Debug/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/ninja.exe cmTC_036f0 
+[1/2] Building C object CMakeFiles\cmTC_036f0.dir\src.c.obj
+FAILED: CMakeFiles/cmTC_036f0.dir/src.c.obj 
+C:\PROGRA~2\MICROS~1\2019\COMMUN~1\VC\Tools\MSVC\1422~1.279\bin\HostX64\x64\cl.exe  /nologo  -IC:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2 /DWIN32 /D_WINDOWS /W3 -DWEBP_HAVE_FLAG_NEON /MDd /ZI /Ob0 /Od /RTC1 /JMC /showIncludes /FoCMakeFiles\cmTC_036f0.dir\src.c.obj /FdCMakeFiles\cmTC_036f0.dir\ /FS -c src.c
+C:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2065: 'this': undeclared identifier
+C:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2146: syntax error: missing ';' before identifier 'is'
+C:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2065: 'is': undeclared identifier
+C:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2146: syntax error: missing ';' before identifier 'not'
+C:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2065: 'not': undeclared identifier
+C:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2146: syntax error: missing ';' before identifier 'valid'
+C:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2065: 'valid': undeclared identifier
+C:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2146: syntax error: missing ';' before identifier 'code'
+C:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(7): error C2065: 'code': undeclared identifier
+C:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(7): error C2143: syntax error: missing ';' before 'return'
+ninja: build stopped: subcommand failed.
+
+Source file was:
+
+      #include "C:/home/dev/ProgramPraktyki/vendor/SDL_image/external/libwebp-1.0.2/cmake/../src/dsp/dsp.h"
+      int main(void) {
+        #if !defined(WEBP_USE_NEON)
+        this is not valid code
+        #endif
+        return 0;
+      }
+    
+Performing C SOURCE FILE Test WEBP_HAVE_FLAG_MSA failed with the following output:
+Change Dir: C:/home/dev/ProgramPraktyki/vendor/SDL_image/external/libwebp-1.0.2/out/build/x64-Debug/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/ninja.exe cmTC_234c0 
+[1/2] Building C object CMakeFiles\cmTC_234c0.dir\src.c.obj
+FAILED: CMakeFiles/cmTC_234c0.dir/src.c.obj 
+C:\PROGRA~2\MICROS~1\2019\COMMUN~1\VC\Tools\MSVC\1422~1.279\bin\HostX64\x64\cl.exe  /nologo  -IC:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2 /DWIN32 /D_WINDOWS /W3 -DWEBP_HAVE_FLAG_MSA /MDd /ZI /Ob0 /Od /RTC1 /JMC /showIncludes /FoCMakeFiles\cmTC_234c0.dir\src.c.obj /FdCMakeFiles\cmTC_234c0.dir\ /FS -c src.c
+C:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2065: 'this': undeclared identifier
+C:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2146: syntax error: missing ';' before identifier 'is'
+C:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2065: 'is': undeclared identifier
+C:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2146: syntax error: missing ';' before identifier 'not'
+C:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2065: 'not': undeclared identifier
+C:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2146: syntax error: missing ';' before identifier 'valid'
+C:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2065: 'valid': undeclared identifier
+C:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2146: syntax error: missing ';' before identifier 'code'
+C:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(7): error C2065: 'code': undeclared identifier
+C:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(7): error C2143: syntax error: missing ';' before 'return'
+ninja: build stopped: subcommand failed.
+
+Source file was:
+
+      #include "C:/home/dev/ProgramPraktyki/vendor/SDL_image/external/libwebp-1.0.2/cmake/../src/dsp/dsp.h"
+      int main(void) {
+        #if !defined(WEBP_USE_MSA)
+        this is not valid code
+        #endif
+        return 0;
+      }
+    
+Performing C SOURCE FILE Test WEBP_HAVE_FLAG_MSA failed with the following output:
+Change Dir: C:/home/dev/ProgramPraktyki/vendor/SDL_image/external/libwebp-1.0.2/out/build/x64-Debug/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/ninja.exe cmTC_3ed5b 
+[1/2] Building C object CMakeFiles\cmTC_3ed5b.dir\src.c.obj
+FAILED: CMakeFiles/cmTC_3ed5b.dir/src.c.obj 
+C:\PROGRA~2\MICROS~1\2019\COMMUN~1\VC\Tools\MSVC\1422~1.279\bin\HostX64\x64\cl.exe  /nologo  -IC:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2 /DWIN32 /D_WINDOWS /W3 -DWEBP_HAVE_FLAG_MSA /MDd /ZI /Ob0 /Od /RTC1 /JMC /showIncludes /FoCMakeFiles\cmTC_3ed5b.dir\src.c.obj /FdCMakeFiles\cmTC_3ed5b.dir\ /FS -c src.c
+C:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2065: 'this': undeclared identifier
+C:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2146: syntax error: missing ';' before identifier 'is'
+C:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2065: 'is': undeclared identifier
+C:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2146: syntax error: missing ';' before identifier 'not'
+C:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2065: 'not': undeclared identifier
+C:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2146: syntax error: missing ';' before identifier 'valid'
+C:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2065: 'valid': undeclared identifier
+C:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2146: syntax error: missing ';' before identifier 'code'
+C:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(7): error C2065: 'code': undeclared identifier
+C:\home\dev\ProgramPraktyki\vendor\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(7): error C2143: syntax error: missing ';' before 'return'
+ninja: build stopped: subcommand failed.
+
+Source file was:
+
+      #include "C:/home/dev/ProgramPraktyki/vendor/SDL_image/external/libwebp-1.0.2/cmake/../src/dsp/dsp.h"
+      int main(void) {
+        #if !defined(WEBP_USE_MSA)
+        this is not valid code
+        #endif
+        return 0;
+      }
+    
+Performing C SOURCE FILE Test WEBP_HAVE_FLAG_MIPS32 failed with the following output:
+Change Dir: C:/home/dev/ProgramPraktyki/android/app/jni/SDL_image/external/libwebp-1.0.2/out/build/x64-Debug/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/ninja.exe cmTC_57820 
+[1/2] Building C object CMakeFiles\cmTC_57820.dir\src.c.obj
+FAILED: CMakeFiles/cmTC_57820.dir/src.c.obj 
+C:\PROGRA~2\MICROS~1\2019\COMMUN~1\VC\Tools\MSVC\1422~1.279\bin\HostX64\x64\cl.exe  /nologo  -IC:\home\dev\ProgramPraktyki\android\app\jni\SDL_image\external\libwebp-1.0.2 /DWIN32 /D_WINDOWS /W3 -DWEBP_HAVE_FLAG_MIPS32 /MDd /ZI /Ob0 /Od /RTC1 /JMC /showIncludes /FoCMakeFiles\cmTC_57820.dir\src.c.obj /FdCMakeFiles\cmTC_57820.dir\ /FS -c src.c
+C:\home\dev\ProgramPraktyki\android\app\jni\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2065: 'this': undeclared identifier
+C:\home\dev\ProgramPraktyki\android\app\jni\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2146: syntax error: missing ';' before identifier 'is'
+C:\home\dev\ProgramPraktyki\android\app\jni\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2065: 'is': undeclared identifier
+C:\home\dev\ProgramPraktyki\android\app\jni\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2146: syntax error: missing ';' before identifier 'not'
+C:\home\dev\ProgramPraktyki\android\app\jni\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2065: 'not': undeclared identifier
+C:\home\dev\ProgramPraktyki\android\app\jni\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2146: syntax error: missing ';' before identifier 'valid'
+C:\home\dev\ProgramPraktyki\android\app\jni\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2065: 'valid': undeclared identifier
+C:\home\dev\ProgramPraktyki\android\app\jni\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2146: syntax error: missing ';' before identifier 'code'
+C:\home\dev\ProgramPraktyki\android\app\jni\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(7): error C2065: 'code': undeclared identifier
+C:\home\dev\ProgramPraktyki\android\app\jni\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(7): error C2143: syntax error: missing ';' before 'return'
+ninja: build stopped: subcommand failed.
+
+Source file was:
+
+      #include "C:/home/dev/ProgramPraktyki/android/app/jni/SDL_image/external/libwebp-1.0.2/cmake/../src/dsp/dsp.h"
+      int main(void) {
+        #if !defined(WEBP_USE_MIPS32)
+        this is not valid code
+        #endif
+        return 0;
+      }
+    
+Performing C SOURCE FILE Test WEBP_HAVE_FLAG_MIPS32 failed with the following output:
+Change Dir: C:/home/dev/ProgramPraktyki/android/app/jni/SDL_image/external/libwebp-1.0.2/out/build/x64-Debug/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/ninja.exe cmTC_2732e 
+[1/2] Building C object CMakeFiles\cmTC_2732e.dir\src.c.obj
+FAILED: CMakeFiles/cmTC_2732e.dir/src.c.obj 
+C:\PROGRA~2\MICROS~1\2019\COMMUN~1\VC\Tools\MSVC\1422~1.279\bin\HostX64\x64\cl.exe  /nologo  -IC:\home\dev\ProgramPraktyki\android\app\jni\SDL_image\external\libwebp-1.0.2 /DWIN32 /D_WINDOWS /W3 -DWEBP_HAVE_FLAG_MIPS32 /MDd /ZI /Ob0 /Od /RTC1 /JMC /showIncludes /FoCMakeFiles\cmTC_2732e.dir\src.c.obj /FdCMakeFiles\cmTC_2732e.dir\ /FS -c src.c
+C:\home\dev\ProgramPraktyki\android\app\jni\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2065: 'this': undeclared identifier
+C:\home\dev\ProgramPraktyki\android\app\jni\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2146: syntax error: missing ';' before identifier 'is'
+C:\home\dev\ProgramPraktyki\android\app\jni\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2065: 'is': undeclared identifier
+C:\home\dev\ProgramPraktyki\android\app\jni\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2146: syntax error: missing ';' before identifier 'not'
+C:\home\dev\ProgramPraktyki\android\app\jni\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2065: 'not': undeclared identifier
+C:\home\dev\ProgramPraktyki\android\app\jni\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2146: syntax error: missing ';' before identifier 'valid'
+C:\home\dev\ProgramPraktyki\android\app\jni\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2065: 'valid': undeclared identifier
+C:\home\dev\ProgramPraktyki\android\app\jni\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2146: syntax error: missing ';' before identifier 'code'
+C:\home\dev\ProgramPraktyki\android\app\jni\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(7): error C2065: 'code': undeclared identifier
+C:\home\dev\ProgramPraktyki\android\app\jni\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(7): error C2143: syntax error: missing ';' before 'return'
+ninja: build stopped: subcommand failed.
+
+Source file was:
+
+      #include "C:/home/dev/ProgramPraktyki/android/app/jni/SDL_image/external/libwebp-1.0.2/cmake/../src/dsp/dsp.h"
+      int main(void) {
+        #if !defined(WEBP_USE_MIPS32)
+        this is not valid code
+        #endif
+        return 0;
+      }
+    
+Performing C SOURCE FILE Test WEBP_HAVE_FLAG_MIPS_DSP_R2 failed with the following output:
+Change Dir: C:/home/dev/ProgramPraktyki/android/app/jni/SDL_image/external/libwebp-1.0.2/out/build/x64-Debug/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/ninja.exe cmTC_bf800 
+[1/2] Building C object CMakeFiles\cmTC_bf800.dir\src.c.obj
+FAILED: CMakeFiles/cmTC_bf800.dir/src.c.obj 
+C:\PROGRA~2\MICROS~1\2019\COMMUN~1\VC\Tools\MSVC\1422~1.279\bin\HostX64\x64\cl.exe  /nologo  -IC:\home\dev\ProgramPraktyki\android\app\jni\SDL_image\external\libwebp-1.0.2 /DWIN32 /D_WINDOWS /W3 -DWEBP_HAVE_FLAG_MIPS_DSP_R2 /MDd /ZI /Ob0 /Od /RTC1 /JMC /showIncludes /FoCMakeFiles\cmTC_bf800.dir\src.c.obj /FdCMakeFiles\cmTC_bf800.dir\ /FS -c src.c
+C:\home\dev\ProgramPraktyki\android\app\jni\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2065: 'this': undeclared identifier
+C:\home\dev\ProgramPraktyki\android\app\jni\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2146: syntax error: missing ';' before identifier 'is'
+C:\home\dev\ProgramPraktyki\android\app\jni\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2065: 'is': undeclared identifier
+C:\home\dev\ProgramPraktyki\android\app\jni\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2146: syntax error: missing ';' before identifier 'not'
+C:\home\dev\ProgramPraktyki\android\app\jni\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2065: 'not': undeclared identifier
+C:\home\dev\ProgramPraktyki\android\app\jni\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2146: syntax error: missing ';' before identifier 'valid'
+C:\home\dev\ProgramPraktyki\android\app\jni\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2065: 'valid': undeclared identifier
+C:\home\dev\ProgramPraktyki\android\app\jni\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2146: syntax error: missing ';' before identifier 'code'
+C:\home\dev\ProgramPraktyki\android\app\jni\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(7): error C2065: 'code': undeclared identifier
+C:\home\dev\ProgramPraktyki\android\app\jni\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(7): error C2143: syntax error: missing ';' before 'return'
+ninja: build stopped: subcommand failed.
+
+Source file was:
+
+      #include "C:/home/dev/ProgramPraktyki/android/app/jni/SDL_image/external/libwebp-1.0.2/cmake/../src/dsp/dsp.h"
+      int main(void) {
+        #if !defined(WEBP_USE_MIPS_DSP_R2)
+        this is not valid code
+        #endif
+        return 0;
+      }
+    
+Performing C SOURCE FILE Test WEBP_HAVE_FLAG_MIPS_DSP_R2 failed with the following output:
+Change Dir: C:/home/dev/ProgramPraktyki/android/app/jni/SDL_image/external/libwebp-1.0.2/out/build/x64-Debug/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/ninja.exe cmTC_e729a 
+[1/2] Building C object CMakeFiles\cmTC_e729a.dir\src.c.obj
+FAILED: CMakeFiles/cmTC_e729a.dir/src.c.obj 
+C:\PROGRA~2\MICROS~1\2019\COMMUN~1\VC\Tools\MSVC\1422~1.279\bin\HostX64\x64\cl.exe  /nologo  -IC:\home\dev\ProgramPraktyki\android\app\jni\SDL_image\external\libwebp-1.0.2 /DWIN32 /D_WINDOWS /W3 -DWEBP_HAVE_FLAG_MIPS_DSP_R2 /MDd /ZI /Ob0 /Od /RTC1 /JMC /showIncludes /FoCMakeFiles\cmTC_e729a.dir\src.c.obj /FdCMakeFiles\cmTC_e729a.dir\ /FS -c src.c
+C:\home\dev\ProgramPraktyki\android\app\jni\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2065: 'this': undeclared identifier
+C:\home\dev\ProgramPraktyki\android\app\jni\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2146: syntax error: missing ';' before identifier 'is'
+C:\home\dev\ProgramPraktyki\android\app\jni\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2065: 'is': undeclared identifier
+C:\home\dev\ProgramPraktyki\android\app\jni\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2146: syntax error: missing ';' before identifier 'not'
+C:\home\dev\ProgramPraktyki\android\app\jni\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2065: 'not': undeclared identifier
+C:\home\dev\ProgramPraktyki\android\app\jni\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2146: syntax error: missing ';' before identifier 'valid'
+C:\home\dev\ProgramPraktyki\android\app\jni\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2065: 'valid': undeclared identifier
+C:\home\dev\ProgramPraktyki\android\app\jni\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2146: syntax error: missing ';' before identifier 'code'
+C:\home\dev\ProgramPraktyki\android\app\jni\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(7): error C2065: 'code': undeclared identifier
+C:\home\dev\ProgramPraktyki\android\app\jni\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(7): error C2143: syntax error: missing ';' before 'return'
+ninja: build stopped: subcommand failed.
+
+Source file was:
+
+      #include "C:/home/dev/ProgramPraktyki/android/app/jni/SDL_image/external/libwebp-1.0.2/cmake/../src/dsp/dsp.h"
+      int main(void) {
+        #if !defined(WEBP_USE_MIPS_DSP_R2)
+        this is not valid code
+        #endif
+        return 0;
+      }
+    
+Performing C SOURCE FILE Test WEBP_HAVE_FLAG_NEON failed with the following output:
+Change Dir: C:/home/dev/ProgramPraktyki/android/app/jni/SDL_image/external/libwebp-1.0.2/out/build/x64-Debug/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/ninja.exe cmTC_c4b25 
+[1/2] Building C object CMakeFiles\cmTC_c4b25.dir\src.c.obj
+FAILED: CMakeFiles/cmTC_c4b25.dir/src.c.obj 
+C:\PROGRA~2\MICROS~1\2019\COMMUN~1\VC\Tools\MSVC\1422~1.279\bin\HostX64\x64\cl.exe  /nologo  -IC:\home\dev\ProgramPraktyki\android\app\jni\SDL_image\external\libwebp-1.0.2 /DWIN32 /D_WINDOWS /W3 -DWEBP_HAVE_FLAG_NEON /MDd /ZI /Ob0 /Od /RTC1 /JMC /showIncludes /FoCMakeFiles\cmTC_c4b25.dir\src.c.obj /FdCMakeFiles\cmTC_c4b25.dir\ /FS -c src.c
+C:\home\dev\ProgramPraktyki\android\app\jni\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2065: 'this': undeclared identifier
+C:\home\dev\ProgramPraktyki\android\app\jni\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2146: syntax error: missing ';' before identifier 'is'
+C:\home\dev\ProgramPraktyki\android\app\jni\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2065: 'is': undeclared identifier
+C:\home\dev\ProgramPraktyki\android\app\jni\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2146: syntax error: missing ';' before identifier 'not'
+C:\home\dev\ProgramPraktyki\android\app\jni\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2065: 'not': undeclared identifier
+C:\home\dev\ProgramPraktyki\android\app\jni\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2146: syntax error: missing ';' before identifier 'valid'
+C:\home\dev\ProgramPraktyki\android\app\jni\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2065: 'valid': undeclared identifier
+C:\home\dev\ProgramPraktyki\android\app\jni\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2146: syntax error: missing ';' before identifier 'code'
+C:\home\dev\ProgramPraktyki\android\app\jni\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(7): error C2065: 'code': undeclared identifier
+C:\home\dev\ProgramPraktyki\android\app\jni\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(7): error C2143: syntax error: missing ';' before 'return'
+ninja: build stopped: subcommand failed.
+
+Source file was:
+
+      #include "C:/home/dev/ProgramPraktyki/android/app/jni/SDL_image/external/libwebp-1.0.2/cmake/../src/dsp/dsp.h"
+      int main(void) {
+        #if !defined(WEBP_USE_NEON)
+        this is not valid code
+        #endif
+        return 0;
+      }
+    
+Performing C SOURCE FILE Test WEBP_HAVE_FLAG_NEON failed with the following output:
+Change Dir: C:/home/dev/ProgramPraktyki/android/app/jni/SDL_image/external/libwebp-1.0.2/out/build/x64-Debug/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/ninja.exe cmTC_bdd48 
+[1/2] Building C object CMakeFiles\cmTC_bdd48.dir\src.c.obj
+FAILED: CMakeFiles/cmTC_bdd48.dir/src.c.obj 
+C:\PROGRA~2\MICROS~1\2019\COMMUN~1\VC\Tools\MSVC\1422~1.279\bin\HostX64\x64\cl.exe  /nologo  -IC:\home\dev\ProgramPraktyki\android\app\jni\SDL_image\external\libwebp-1.0.2 /DWIN32 /D_WINDOWS /W3 -DWEBP_HAVE_FLAG_NEON /MDd /ZI /Ob0 /Od /RTC1 /JMC /showIncludes /FoCMakeFiles\cmTC_bdd48.dir\src.c.obj /FdCMakeFiles\cmTC_bdd48.dir\ /FS -c src.c
+C:\home\dev\ProgramPraktyki\android\app\jni\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2065: 'this': undeclared identifier
+C:\home\dev\ProgramPraktyki\android\app\jni\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2146: syntax error: missing ';' before identifier 'is'
+C:\home\dev\ProgramPraktyki\android\app\jni\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2065: 'is': undeclared identifier
+C:\home\dev\ProgramPraktyki\android\app\jni\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2146: syntax error: missing ';' before identifier 'not'
+C:\home\dev\ProgramPraktyki\android\app\jni\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2065: 'not': undeclared identifier
+C:\home\dev\ProgramPraktyki\android\app\jni\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2146: syntax error: missing ';' before identifier 'valid'
+C:\home\dev\ProgramPraktyki\android\app\jni\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2065: 'valid': undeclared identifier
+C:\home\dev\ProgramPraktyki\android\app\jni\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2146: syntax error: missing ';' before identifier 'code'
+C:\home\dev\ProgramPraktyki\android\app\jni\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(7): error C2065: 'code': undeclared identifier
+C:\home\dev\ProgramPraktyki\android\app\jni\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(7): error C2143: syntax error: missing ';' before 'return'
+ninja: build stopped: subcommand failed.
+
+Source file was:
+
+      #include "C:/home/dev/ProgramPraktyki/android/app/jni/SDL_image/external/libwebp-1.0.2/cmake/../src/dsp/dsp.h"
+      int main(void) {
+        #if !defined(WEBP_USE_NEON)
+        this is not valid code
+        #endif
+        return 0;
+      }
+    
+Performing C SOURCE FILE Test WEBP_HAVE_FLAG_MSA failed with the following output:
+Change Dir: C:/home/dev/ProgramPraktyki/android/app/jni/SDL_image/external/libwebp-1.0.2/out/build/x64-Debug/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/ninja.exe cmTC_b4280 
+[1/2] Building C object CMakeFiles\cmTC_b4280.dir\src.c.obj
+FAILED: CMakeFiles/cmTC_b4280.dir/src.c.obj 
+C:\PROGRA~2\MICROS~1\2019\COMMUN~1\VC\Tools\MSVC\1422~1.279\bin\HostX64\x64\cl.exe  /nologo  -IC:\home\dev\ProgramPraktyki\android\app\jni\SDL_image\external\libwebp-1.0.2 /DWIN32 /D_WINDOWS /W3 -DWEBP_HAVE_FLAG_MSA /MDd /ZI /Ob0 /Od /RTC1 /JMC /showIncludes /FoCMakeFiles\cmTC_b4280.dir\src.c.obj /FdCMakeFiles\cmTC_b4280.dir\ /FS -c src.c
+C:\home\dev\ProgramPraktyki\android\app\jni\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2065: 'this': undeclared identifier
+C:\home\dev\ProgramPraktyki\android\app\jni\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2146: syntax error: missing ';' before identifier 'is'
+C:\home\dev\ProgramPraktyki\android\app\jni\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2065: 'is': undeclared identifier
+C:\home\dev\ProgramPraktyki\android\app\jni\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2146: syntax error: missing ';' before identifier 'not'
+C:\home\dev\ProgramPraktyki\android\app\jni\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2065: 'not': undeclared identifier
+C:\home\dev\ProgramPraktyki\android\app\jni\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2146: syntax error: missing ';' before identifier 'valid'
+C:\home\dev\ProgramPraktyki\android\app\jni\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2065: 'valid': undeclared identifier
+C:\home\dev\ProgramPraktyki\android\app\jni\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2146: syntax error: missing ';' before identifier 'code'
+C:\home\dev\ProgramPraktyki\android\app\jni\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(7): error C2065: 'code': undeclared identifier
+C:\home\dev\ProgramPraktyki\android\app\jni\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(7): error C2143: syntax error: missing ';' before 'return'
+ninja: build stopped: subcommand failed.
+
+Source file was:
+
+      #include "C:/home/dev/ProgramPraktyki/android/app/jni/SDL_image/external/libwebp-1.0.2/cmake/../src/dsp/dsp.h"
+      int main(void) {
+        #if !defined(WEBP_USE_MSA)
+        this is not valid code
+        #endif
+        return 0;
+      }
+    
+Performing C SOURCE FILE Test WEBP_HAVE_FLAG_MSA failed with the following output:
+Change Dir: C:/home/dev/ProgramPraktyki/android/app/jni/SDL_image/external/libwebp-1.0.2/out/build/x64-Debug/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/ninja.exe cmTC_06278 
+[1/2] Building C object CMakeFiles\cmTC_06278.dir\src.c.obj
+FAILED: CMakeFiles/cmTC_06278.dir/src.c.obj 
+C:\PROGRA~2\MICROS~1\2019\COMMUN~1\VC\Tools\MSVC\1422~1.279\bin\HostX64\x64\cl.exe  /nologo  -IC:\home\dev\ProgramPraktyki\android\app\jni\SDL_image\external\libwebp-1.0.2 /DWIN32 /D_WINDOWS /W3 -DWEBP_HAVE_FLAG_MSA /MDd /ZI /Ob0 /Od /RTC1 /JMC /showIncludes /FoCMakeFiles\cmTC_06278.dir\src.c.obj /FdCMakeFiles\cmTC_06278.dir\ /FS -c src.c
+C:\home\dev\ProgramPraktyki\android\app\jni\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2065: 'this': undeclared identifier
+C:\home\dev\ProgramPraktyki\android\app\jni\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2146: syntax error: missing ';' before identifier 'is'
+C:\home\dev\ProgramPraktyki\android\app\jni\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2065: 'is': undeclared identifier
+C:\home\dev\ProgramPraktyki\android\app\jni\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2146: syntax error: missing ';' before identifier 'not'
+C:\home\dev\ProgramPraktyki\android\app\jni\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2065: 'not': undeclared identifier
+C:\home\dev\ProgramPraktyki\android\app\jni\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2146: syntax error: missing ';' before identifier 'valid'
+C:\home\dev\ProgramPraktyki\android\app\jni\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2065: 'valid': undeclared identifier
+C:\home\dev\ProgramPraktyki\android\app\jni\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(5): error C2146: syntax error: missing ';' before identifier 'code'
+C:\home\dev\ProgramPraktyki\android\app\jni\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(7): error C2065: 'code': undeclared identifier
+C:\home\dev\ProgramPraktyki\android\app\jni\SDL_image\external\libwebp-1.0.2\out\build\x64-Debug\CMakeFiles\CMakeTmp\src.c(7): error C2143: syntax error: missing ';' before 'return'
+ninja: build stopped: subcommand failed.
+
+Source file was:
+
+      #include "C:/home/dev/ProgramPraktyki/android/app/jni/SDL_image/external/libwebp-1.0.2/cmake/../src/dsp/dsp.h"
+      int main(void) {
+        #if !defined(WEBP_USE_MSA)
+        this is not valid code
+        #endif
+        return 0;
+      }
+    

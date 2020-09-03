@@ -1,0 +1,240 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"hasInstallRule" : true,
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.5"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3,
+						4,
+						5,
+						6,
+						7,
+						8,
+						9,
+						10,
+						11,
+						12,
+						13,
+						14,
+						15,
+						16,
+						17,
+						18,
+						19,
+						20
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "WebP",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3,
+						4,
+						5,
+						6,
+						7,
+						8,
+						9,
+						10,
+						11,
+						12,
+						13,
+						14,
+						15,
+						16,
+						17,
+						18,
+						19,
+						20
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "cwebp::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-cwebp-Debug-9b2e3f66fd66924f1d63.json",
+					"name" : "cwebp",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "dwebp::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-dwebp-Debug-bd491e5c3e20529c0313.json",
+					"name" : "dwebp",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "exampleutil::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-exampleutil-Debug-cc3b3d35edfd59993837.json",
+					"name" : "exampleutil",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "get_disto::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-get_disto-Debug-75fd46bf5f3cf3df8a65.json",
+					"name" : "get_disto",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "imagedec::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-imagedec-Debug-ce7cf85881923c451370.json",
+					"name" : "imagedec",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "imageenc::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-imageenc-Debug-329c7caaae03fc06610b.json",
+					"name" : "imageenc",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "imageioutil::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-imageioutil-Debug-ac6465957010c1ca34e0.json",
+					"name" : "imageioutil",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "img2webp::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-img2webp-Debug-cbac7afbb993da6108a2.json",
+					"name" : "img2webp",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "libwebpmux::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-libwebpmux-Debug-7be381598b81a54a5684.json",
+					"name" : "libwebpmux",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "webp::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-webp-Debug-63cde3cdca55f62f39de.json",
+					"name" : "webp",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "webp_quality::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-webp_quality-Debug-844c4768e0de2c462684.json",
+					"name" : "webp_quality",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "webpdecode::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-webpdecode-Debug-41aa70be31d6016e5638.json",
+					"name" : "webpdecode",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "webpdecoder::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-webpdecoder-Debug-b0c59c66cb941c218b0d.json",
+					"name" : "webpdecoder",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "webpdemux::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-webpdemux-Debug-86e58dad9ca8ce8f0e8f.json",
+					"name" : "webpdemux",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "webpdsp::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-webpdsp-Debug-f898d6c9b16b3932b432.json",
+					"name" : "webpdsp",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "webpdspdecode::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-webpdspdecode-Debug-afc6031ae7fffe0ccc50.json",
+					"name" : "webpdspdecode",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "webpencode::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-webpencode-Debug-2cdb5e05123d8c2c2e85.json",
+					"name" : "webpencode",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "webpinfo::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-webpinfo-Debug-c8a8207ca89145deca81.json",
+					"name" : "webpinfo",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "webpmux::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-webpmux-Debug-356982c3764278474427.json",
+					"name" : "webpmux",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "webputils::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-webputils-Debug-274caf64df62441017a5.json",
+					"name" : "webputils",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "webputilsdecode::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-webputilsdecode-Debug-2a398e2a7e6289eedf96.json",
+					"name" : "webputilsdecode",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "C:/home/dev/ProgramPraktyki/android/app/jni/SDL_image/external/libwebp-1.0.2/out/build/x64-Debug",
+		"source" : "C:/home/dev/ProgramPraktyki/android/app/jni/SDL_image/external/libwebp-1.0.2"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 0
+	}
+}

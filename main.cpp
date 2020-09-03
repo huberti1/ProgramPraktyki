@@ -54,6 +54,10 @@ SDL_Point realMousePos;
 bool keys[SDL_NUM_SCANCODES];
 bool buttons[SDL_BUTTON_X2 + 1];
 
+#define PLAYER_ROTATION_SPEED 0.1
+#define PI 3.14159265358979323846
+
+
 void logOutputCallback(void* userdata, int category, SDL_LogPriority priority, const char* message)
 {
 	std::cout << message << std::endl;
@@ -219,8 +223,13 @@ SDL_RenderFillCircle(SDL_Renderer* renderer, int x, int y, int radius)
 	return status;
 }
 
+float speedX = 5;
+float speedY = 3;
 int x = 50;
 int y = 50;
+
+int radius = 10;
+
 
 Uint32 my_callbackfunc(Uint32 interval, void* param)
 {
@@ -242,9 +251,123 @@ Uint32 my_callbackfunc(Uint32 interval, void* param)
 
 	SDL_PushEvent(&event);
 #endif
-//	std::cout << "Hello World!" << std::endl;
-	x++;
+	//	std::cout << "Hello World!" << std::endl;
+	x += speedX;
+	y += speedY;
+	if (x + radius / 2 > windowWidth || x - radius / 2 < 0) {
+		speedX = -speedX;
+	}
+	if (y + radius / 2 > windowHeight || y - radius / 2 < 0) {
+		speedY = -speedY;
+	}
 	return(interval);
+}
+
+float getAngle(int x1, int y1, int x2, int y2)
+{
+	float angle = -90 + atan2(y1 - y2, x1 - x2) * (180 / PI);
+	return angle >= 0 ? angle : 360 + angle;
+}
+
+void calcSlope(int x1, int y1, int x2, int y2, float* dx, float* dy)
+{
+	int steps = std::max(abs(x1 - x2), abs(y1 - y2));
+	if (steps == 0) {
+		*dx = *dy = 0;
+		return;
+	}
+	*dx = (x1 - x2);
+	*dx /= steps;
+	*dy = (y1 - y2);
+	*dy /= steps;
+}
+
+std::string readWholeFile(std::string path)
+{
+	std::ifstream ifs(path);
+	// TODO: Error handling?
+	std::stringstream ss(path);
+	ss << ifs.rdbuf();
+	return ss.str();
+}
+
+struct Line {
+	int x1 = 0, y1 = 0, x2 = 0, y2 = 0;
+	SDL_Color color{};
+};
+
+struct Circle {
+	int x = 0, y = 0, r = 0;
+	SDL_Color color{};
+};
+
+struct Objects {
+	std::vector <Line> lines;
+	std::vector <Circle> circles;
+	std::vector <Circle> filledCircles;
+
+	void draw(SDL_Renderer* renderer)
+	{
+		for (Line& line : lines) {
+			SDL_SetRenderDrawColor(renderer, line.color.r, line.color.g, line.color.b, line.color.a);
+			SDL_RenderDrawLine(renderer, line.x1, line.y1, line.x2, line.y2);
+		}
+		for (Circle& circle : circles) {
+			SDL_SetRenderDrawColor(renderer, circle.color.r, circle.color.g, circle.color.b, circle.color.a);
+			SDL_RenderDrawCircle(renderer, circle.x, circle.y, circle.r);
+		}
+		for (Circle& filledCircle : filledCircles) {
+			SDL_SetRenderDrawColor(renderer, filledCircle.color.r, filledCircle.color.g, filledCircle.color.b, filledCircle.color.a);
+			SDL_RenderFillCircle(renderer, filledCircle.x, filledCircle.y, filledCircle.r);
+		}
+	}
+};
+
+Objects readObjects(std::string file)
+{
+	Objects objects;
+	std::stringstream iss(file);
+	std::vector<std::string> attributes;
+	std::string line;
+	while (std::getline(iss, line, ' ')) {
+		attributes.push_back(line);
+	}
+	SDL_Color currentC = { 255,255,255,255 };
+	for (char& ch : line) {
+		if (ch == '\n') {
+			ch = ' ';
+		}
+	}
+	for (int i = 0; i < attributes.size(); ++i) {
+		// TODO: Update colors of lines and circles
+		if (attributes[i] == "L") {
+			objects.lines.push_back(Line());
+			objects.lines.back().x1 = std::stoi(attributes[++i]);
+			objects.lines.back().y1 = std::stoi(attributes[++i]);
+			objects.lines.back().x2 = std::stoi(attributes[++i]);
+			objects.lines.back().y2 = std::stoi(attributes[++i]);
+			objects.lines.back().color = currentC;
+		}
+		else if (attributes[i] == "C") {
+			objects.circles.push_back(Circle());
+			objects.circles.back().x = std::stoi(attributes[++i]);
+			objects.circles.back().y = std::stoi(attributes[++i]);
+			objects.circles.back().r = std::stoi(attributes[++i]);
+			objects.circles.back().color = currentC;
+		}
+		else if (attributes[i] == "K") {
+			objects.filledCircles.push_back(Circle());
+			objects.filledCircles.back().x = std::stoi(attributes[++i]);
+			objects.filledCircles.back().y = std::stoi(attributes[++i]);
+			objects.filledCircles.back().r = std::stoi(attributes[++i]);
+			objects.filledCircles.back().color = currentC;
+		}
+		else if (attributes[i] == "P") {
+			std::string color = attributes[++i];
+			std::sscanf(color.c_str(), "%02x%02x%02x", &currentC.r, &currentC.g, &currentC.b);
+		}
+	}
+	return objects;
 }
 
 int main(int argc, char* argv[])
@@ -255,7 +378,17 @@ int main(int argc, char* argv[])
 	SDL_Init(SDL_INIT_EVERYTHING);
 	TTF_Init();
 	SDL_GetMouseState(&mousePos.x, &mousePos.y);
-	SDL_Window* window = SDL_CreateWindow("ProgramPraktyki", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, windowWidth, windowHeight, SDL_WINDOW_RESIZABLE);
+	// TODO: SDL2 not multiple monitor support ???
+#if 1 // TODO: Remember to turn it off on reelase
+	SDL_Window * window = SDL_CreateWindow("ProgramPraktyki", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, windowWidth, windowHeight, SDL_WINDOW_RESIZABLE);
+#else
+	SDL_Window* window = SDL_CreateWindow("ProgramPraktyki", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, windowWidth, windowHeight, SDL_WINDOW_RESIZABLE | SDL_WINDOW_FULLSCREEN_DESKTOP);
+	SDL_DisplayMode dm;
+	SDL_GetCurrentDisplayMode(0, &dm);
+	windowWidth = dm.w;
+	windowHeight = dm.h;
+#endif
+	//SDL_MaximizeWindow(window);
 	SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 	TTF_Font* robotoF = TTF_OpenFont("res/roboto.ttf", 72);
 	int w, h;
@@ -265,6 +398,24 @@ int main(int argc, char* argv[])
 	bool running = true;
 	SDL_AddTimer(20, my_callbackfunc, 0);
 
+	double angle = 0;
+	SDL_Rect r;
+	r.w = 32;
+	r.h = 32;
+	r.x = 0;
+	r.y = 0;
+
+	SDL_Texture* playerT = IMG_LoadTexture(renderer, "res/player.bmp");
+
+	/*
+	l-line
+	c-circle
+	k-filled circle
+	p-change color
+	*/
+	std::string movingFile = readWholeFile("res/ruchome.txt");
+	Objects objects = readObjects(movingFile);
+
 	while (running) {
 		SDL_Event event;
 		while (SDL_PollEvent(&event)) {
@@ -273,7 +424,7 @@ int main(int argc, char* argv[])
 				// TODO: On mobile remember to use eventWatch function (it doesn't reach this code when terminating)
 			}
 			if (event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_RESIZED) {
-				SDL_RenderSetScale(renderer, event.window.data1 / (float)windowWidth, event.window.data2 / (float)windowHeight);
+				//SDL_RenderSetScale(renderer, event.window.data1 / (float)windowWidth, event.window.data2 / (float)windowHeight);
 			}
 			if (event.type == SDL_KEYDOWN) {
 				keys[event.key.keysym.scancode] = true;
@@ -296,12 +447,19 @@ int main(int argc, char* argv[])
 				realMousePos.y = event.motion.y;
 			}
 		}
+		if (keys[SDL_SCANCODE_A]) {
+			angle -= PLAYER_ROTATION_SPEED;
+		}
+		if (keys[SDL_SCANCODE_D]) {
+			angle += PLAYER_ROTATION_SPEED;
+		}
+		if (keys[SDL_SCANCODE_W]) {
+			angle += PLAYER_ROTATION_SPEED;
+		}
 		SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
 		SDL_RenderClear(renderer);
-		// timer co 20 ms
-		SDL_SetRenderDrawColor(renderer, 0, 255, 0, 0);
-		SDL_RenderFillCircle(renderer, x, y, 10);
-		//SDL_RenderDrawLine(renderer, 50, 50, 100, 50);
+		SDL_RenderCopyEx(renderer, playerT, 0, &r, getAngle(r.x + r.w / 2, r.y + r.h / 2, mousePos.x, mousePos.y), 0, SDL_FLIP_NONE);
+		objects.draw(renderer);
 		SDL_RenderPresent(renderer);
 	}
 	// TODO: On mobile remember to use eventWatch function (it doesn't reach this code when terminating)

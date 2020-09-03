@@ -1,0 +1,6 @@
+C:/home/dev/ProgramPraktyki/vendor/PUGIXML/out/build/x64-Debug/CMakeFiles/pugixml.dir
+C:/home/dev/ProgramPraktyki/vendor/PUGIXML/out/build/x64-Debug/CMakeFiles/install/local.dir
+C:/home/dev/ProgramPraktyki/vendor/PUGIXML/out/build/x64-Debug/CMakeFiles/install.dir
+C:/home/dev/ProgramPraktyki/vendor/PUGIXML/out/build/x64-Debug/CMakeFiles/edit_cache.dir
+C:/home/dev/ProgramPraktyki/vendor/PUGIXML/out/build/x64-Debug/CMakeFiles/rebuild_cache.dir
+C:/home/dev/ProgramPraktyki/vendor/PUGIXML/out/build/x64-Debug/CMakeFiles/list_install_components.dir
