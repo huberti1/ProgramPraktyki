@@ -6,16 +6,10 @@ C:\home\dev\ProgramPraktyki\main.cpp(256,13): warning C4244:  '+=': conversion f
 C:\home\dev\ProgramPraktyki\main.cpp(268,14): warning C4244:  'initializing': conversion from 'double' to 'float', possible loss of data
 C:\home\dev\ProgramPraktyki\main.cpp(279,12): warning C4244:  '=': conversion from 'int' to 'float', possible loss of data
 C:\home\dev\ProgramPraktyki\main.cpp(281,12): warning C4244:  '=': conversion from 'int' to 'float', possible loss of data
-C:\home\dev\ProgramPraktyki\main.cpp(341,20): warning C4018:  '<': signed/unsigned mismatch
-C:\home\dev\ProgramPraktyki\main.cpp(367,31): warning C4477:  'sscanf' : format string '%02x' requires an argument of type 'unsigned int *', but variadic argument 1 has type 'Uint8 *'
-C:\home\dev\ProgramPraktyki\main.cpp(367,31): message :  consider using '%hhx' in the format string
-C:\home\dev\ProgramPraktyki\main.cpp(367,31): warning C4477:  'sscanf' : format string '%02x' requires an argument of type 'unsigned int *', but variadic argument 2 has type 'Uint8 *'
-C:\home\dev\ProgramPraktyki\main.cpp(367,31): message :  consider using '%hhx' in the format string
-C:\home\dev\ProgramPraktyki\main.cpp(367,31): warning C4477:  'sscanf' : format string '%02x' requires an argument of type 'unsigned int *', but variadic argument 3 has type 'Uint8 *'
-C:\home\dev\ProgramPraktyki\main.cpp(367,31): message :  consider using '%hhx' in the format string
-C:\home\dev\ProgramPraktyki\main.cpp(367,1): warning C4996:  'sscanf': This function or variable may be unsafe. Consider using sscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\home\dev\ProgramPraktyki\main.cpp(355,20): warning C4018:  '<': signed/unsigned mismatch
+C:\home\dev\ProgramPraktyki\main.cpp(382,1): warning C4996:  'sscanf': This function or variable may be unsafe. Consider using sscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
 C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\stdio.h(2263): message :  see declaration of 'sscanf'
-C:\home\dev\ProgramPraktyki\main.cpp(375,22): warning C4244:  'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-C:\home\dev\ProgramPraktyki\main.cpp(444,33): warning C4244:  '=': conversion from 'float' to 'int', possible loss of data
-C:\home\dev\ProgramPraktyki\main.cpp(445,33): warning C4244:  '=': conversion from 'float' to 'int', possible loss of data
+C:\home\dev\ProgramPraktyki\main.cpp(393,22): warning C4244:  'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+C:\home\dev\ProgramPraktyki\main.cpp(462,33): warning C4244:  '=': conversion from 'float' to 'int', possible loss of data
+C:\home\dev\ProgramPraktyki\main.cpp(463,33): warning C4244:  '=': conversion from 'float' to 'int', possible loss of data
   ProgramPraktyki.vcxproj -> C:\home\dev\ProgramPraktyki\bin\Debug_x86\ProgramPraktyki.exe

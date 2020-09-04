@@ -327,19 +327,32 @@ Objects readObjects(std::string file)
 {
 	Objects objects;
 	std::stringstream iss(file);
-	std::vector<std::string> attributes;
+	std::vector<std::string> lines;
 	std::string line;
-	while (std::getline(iss, line, ' ')) {
-		attributes.push_back(line);
+	while (std::getline(iss, line)) {
+		lines.push_back(line);
 	}
-	SDL_Color currentC = { 255,255,255,255 };
-	for (char& ch : line) {
-		if (ch == '\n') {
-			ch = ' ';
+	std::vector<std::string> attributes;
+	{
+		for (std::string& line : lines) {
+			std::stringstream ss(line);
+			std::string s;
+			while (std::getline(ss, s, ' ')) {
+				attributes.push_back(s);
+			}
 		}
 	}
+	SDL_Color currentC = { 255,255,255,255 };
+#if 0
+	for (std::string& attribute : attributes) {
+		for (char& ch : attribute) {
+			if (ch == '\n') {
+				ch = ' ';
+			}
+		}
+	}
+#endif
 	for (int i = 0; i < attributes.size(); ++i) {
-		// TODO: Update colors of lines and circles
 		if (attributes[i] == "L") {
 			objects.lines.push_back(Line());
 			objects.lines.back().x1 = std::stoi(attributes[++i]);
@@ -364,7 +377,12 @@ Objects readObjects(std::string file)
 		}
 		else if (attributes[i] == "P") {
 			std::string color = attributes[++i];
-			std::sscanf(color.c_str(), "%02x%02x%02x", &currentC.r, &currentC.g, &currentC.b);
+			color = color.erase(0, 1);
+			int r, g, b;
+			std::sscanf(color.c_str(), "%02x%02x%02x", &r, &g, &b);
+			currentC.r = r;
+			currentC.g = g;
+			currentC.b = b;
 		}
 	}
 	return objects;
