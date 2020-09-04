@@ -56,6 +56,7 @@ bool buttons[SDL_BUTTON_X2 + 1];
 
 #define PLAYER_ROTATION_SPEED 0.1
 #define PI 3.14159265358979323846
+#define PLAYER_SPEED  2
 
 
 void logOutputCallback(void* userdata, int category, SDL_LogPriority priority, const char* message)
@@ -260,6 +261,7 @@ Uint32 my_callbackfunc(Uint32 interval, void* param)
 	if (y + radius / 2 > windowHeight || y - radius / 2 < 0) {
 		speedY = -speedY;
 	}
+	
 	return(interval);
 }
 
@@ -423,7 +425,7 @@ int main(int argc, char* argv[])
 	r.x = 0;
 	r.y = 0;
 
-	SDL_Texture* playerT = IMG_LoadTexture(renderer, "res/player.bmp");
+	SDL_Texture* playerT = IMG_LoadTexture(renderer, "res/test.bmp");
 
 	/*
 	l-line
@@ -464,19 +466,23 @@ int main(int argc, char* argv[])
 				realMousePos.x = event.motion.x;
 				realMousePos.y = event.motion.y;
 			}
-		}
+		}	
 		if (keys[SDL_SCANCODE_A]) {
-			angle -= PLAYER_ROTATION_SPEED;
+			if (angle < 0) angle = 360.0;
+			else angle -= PLAYER_ROTATION_SPEED;
 		}
 		if (keys[SDL_SCANCODE_D]) {
-			angle += PLAYER_ROTATION_SPEED;
+			if (angle > 360) angle = 0.0;
+			else angle += PLAYER_ROTATION_SPEED;
 		}
 		if (keys[SDL_SCANCODE_W]) {
-			angle += PLAYER_ROTATION_SPEED;
+			r.x -= sin(angle * (M_PI / 180)) * PLAYER_SPEED;
+			r.y += cos(angle * (M_PI / 180)) * PLAYER_SPEED;
 		}
+		
 		SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
 		SDL_RenderClear(renderer);
-		SDL_RenderCopyEx(renderer, playerT, 0, &r, getAngle(r.x + r.w / 2, r.y + r.h / 2, mousePos.x, mousePos.y), 0, SDL_FLIP_NONE);
+		SDL_RenderCopyEx(renderer, playerT, 0, &r, angle, 0, SDL_FLIP_NONE);
 		objects.draw(renderer);
 		SDL_RenderPresent(renderer);
 	}
