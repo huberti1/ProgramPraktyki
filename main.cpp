@@ -261,7 +261,7 @@ Uint32 my_callbackfunc(Uint32 interval, void* param)
 	if (y + radius / 2 > windowHeight || y - radius / 2 < 0) {
 		speedY = -speedY;
 	}
-	
+
 	return(interval);
 }
 
@@ -296,11 +296,38 @@ std::string readWholeFile(std::string path)
 struct Line {
 	int x1 = 0, y1 = 0, x2 = 0, y2 = 0;
 	SDL_Color color{};
+	int dx = 1;
+	int dy = -1;
 };
 
 struct Circle {
 	int x = 0, y = 0, r = 0;
 	SDL_Color color{};
+	int dx = 1;
+	int dy = -1;
+	int speed = random(1, 10);
+
+	void move()
+	{
+		x += dx * speed;
+		y += dy * speed;
+		if (x - r < 0) {
+			dx = -dx;
+			x = r;
+		}
+		if (x + r > windowWidth) {
+			dx = -dx;
+			x = windowWidth - r;
+		}
+		if (y - r < 0) {
+			dy = -dy;
+			y = r;
+		}
+		if (y + r > windowHeight) {
+			dy = -dy;
+			y = windowHeight - r;
+		}
+	}
 };
 
 struct Objects {
@@ -345,15 +372,6 @@ Objects readObjects(std::string file)
 		}
 	}
 	SDL_Color currentC = { 255,255,255,255 };
-#if 0
-	for (std::string& attribute : attributes) {
-		for (char& ch : attribute) {
-			if (ch == '\n') {
-				ch = ' ';
-			}
-		}
-	}
-#endif
 	for (int i = 0; i < attributes.size(); ++i) {
 		if (attributes[i] == "L") {
 			objects.lines.push_back(Line());
@@ -408,7 +426,6 @@ int main(int argc, char* argv[])
 	windowWidth = dm.w;
 	windowHeight = dm.h;
 #endif
-	//SDL_MaximizeWindow(window);
 	SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 	TTF_Font* robotoF = TTF_OpenFont("res/roboto.ttf", 72);
 	int w, h;
@@ -435,6 +452,36 @@ int main(int argc, char* argv[])
 	*/
 	std::string movingFile = readWholeFile("res/ruchome.txt");
 	Objects objects = readObjects(movingFile);
+	{
+		int i = 0;
+		for (Line& line : objects.lines) {
+			int length = std::abs(line.x2 - line.x1);
+			SDL_Point position = { random(0, windowWidth - length), random(0, windowHeight - length) };
+			line.x1 += position.x;
+			line.y1 += position.y;
+			line.x2 += position.x;
+			line.y2 += position.y;
+			// TOOO: They cannot collide with other objects
+			for (int j = 0; j < i; ++j) {
+				// TODO: line-line collision detection or convert Line into SDL_Rect
+			}
+			++i;
+		}
+	}
+	// TODO: Does it make sense to randomize position of circles when they are in file already?
+	for (Circle& circle : objects.circles) {
+		SDL_Point position = { random(circle.r, windowWidth - circle.r), random(circle.r, windowHeight - circle.r) };
+		circle.x = position.x;
+		circle.y = position.y;
+		// TOOO: They cannot collide with other objects
+
+	}
+	for (Circle& circle : objects.filledCircles) {
+		SDL_Point position = { random(circle.r, windowWidth - circle.r), random(circle.r, windowHeight - circle.r) };
+		circle.x = position.x;
+		circle.y = position.y;
+		// TOOO: They cannot collide with other objects
+	}
 
 	while (running) {
 		SDL_Event event;
@@ -466,7 +513,7 @@ int main(int argc, char* argv[])
 				realMousePos.x = event.motion.x;
 				realMousePos.y = event.motion.y;
 			}
-		}	
+		}
 		if (keys[SDL_SCANCODE_A]) {
 			if (angle < 0) angle = 360.0;
 			else angle -= PLAYER_ROTATION_SPEED;
@@ -479,7 +526,29 @@ int main(int argc, char* argv[])
 			r.x -= sin(angle * (M_PI / 180)) * PLAYER_SPEED;
 			r.y += cos(angle * (M_PI / 180)) * PLAYER_SPEED;
 		}
-		
+		for (Line& line : objects.lines) {
+			line.x1 += line.dx;
+			line.y1 += line.dy;
+			line.x2 += line.dx;
+			line.y2 += line.dy;
+			int maxX = std::max(line.x1, line.x2);
+			int maxY = std::max(line.y1, line.y2);
+			int minX = std::min(line.x1, line.x2);
+			int minY = std::min(line.y1, line.y2);
+			if (maxX > windowWidth || minX < 0) {
+				line.dx = -line.dx;
+			}
+			if (maxY > windowHeight || minY < 0) {
+				line.dy = -line.dy;
+			}
+		}
+		for (Circle& circle : objects.circles) {
+			circle.move();
+		}
+		for (Circle& filledCircle : objects.filledCircles) {
+			filledCircle.move();
+		}
+
 		SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
 		SDL_RenderClear(renderer);
 		SDL_RenderCopyEx(renderer, playerT, 0, &r, angle, 0, SDL_FLIP_NONE);
