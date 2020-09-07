@@ -55,9 +55,10 @@ bool keys[SDL_NUM_SCANCODES];
 bool buttons[SDL_BUTTON_X2 + 1];
 
 #define PLAYER_ROTATION_SPEED 0.1
+#define PLAYER_SPEED 0.1
+#define PLAYER_SPEED_INCREASE 0.001
+#define PLAYER_SPEED_LIMIT 1
 #define PI 3.14159265358979323846
-#define PLAYER_SPEED  2
-
 
 void logOutputCallback(void* userdata, int category, SDL_LogPriority priority, const char* message)
 {
@@ -114,6 +115,14 @@ struct Text {
 	void setText(SDL_Renderer* renderer, TTF_Font* font, int value, SDL_Color c = { 255,255,255 })
 	{
 		setText(renderer, font, std::to_string(value), c);
+	}
+
+	void adjustSize(float wMultiplier, float hMultiplier)
+	{
+		float w, h;
+		SDL_QueryTextureF(t, 0, 0, &w, &h);
+		dstR.w = w * wMultiplier;
+		dstR.h = h * hMultiplier;
 	}
 
 	void draw(SDL_Renderer* renderer)
@@ -408,6 +417,56 @@ Objects readObjects(std::string file)
 	return objects;
 }
 
+enum class State {
+	Game,
+	Menu,
+};
+
+struct Button {
+	SDL_Rect r{};
+	SDL_Color color{};
+	Text text;
+
+	void draw(SDL_Renderer* renderer)
+	{
+		SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
+		SDL_RenderFillRect(renderer, &r);
+		text.draw(renderer);
+	}
+};
+
+struct Entity {
+	SDL_FRect r{};
+	SDL_Texture* t = 0;
+	float angle = 0;
+	float speed = 0.1;
+
+	void draw(SDL_Renderer* renderer)
+	{
+		SDL_RenderCopyExF(renderer, t, 0, &r, angle, 0, SDL_FLIP_NONE);
+	}
+};
+
+// NOTE: Source: https://stackoverflow.com/questions/2259476/rotating-a-point-about-another-point-2d
+SDL_FPoint rotatePoint(float cx, float cy, float angle, SDL_FPoint p)
+{
+	float s = sin(angle);
+	float c = cos(angle);
+
+	// translate point back to origin:
+	p.x -= cx;
+	p.y -= cy;
+
+	// rotate point
+	float xnew = p.x * c - p.y * s;
+	float ynew = p.x * s + p.y * c;
+
+	// translate point back:
+	p.x = xnew + cx;
+	p.y = ynew + cy;
+	return p;
+}
+
 int main(int argc, char* argv[])
 {
 	std::srand(std::time(0));
@@ -435,14 +494,24 @@ int main(int argc, char* argv[])
 	bool running = true;
 	SDL_AddTimer(20, my_callbackfunc, 0);
 
-	double angle = 0;
-	SDL_Rect r;
-	r.w = 32;
-	r.h = 32;
-	r.x = 0;
-	r.y = 0;
-
-	SDL_Texture* playerT = IMG_LoadTexture(renderer, "res/test.bmp");
+	SDL_Texture* bulletT = IMG_LoadTexture(renderer, "res/bullet.png");
+	Entity firstPlayer;
+	firstPlayer.r.w = 32;
+	firstPlayer.r.h = 32;
+	firstPlayer.r.x = 0;
+	firstPlayer.r.y = 0;
+	firstPlayer.t = IMG_LoadTexture(renderer, "res/player1.png");
+	firstPlayer.speed = PLAYER_SPEED;
+	bool firstPlayerSlowDownOnAccelerationKeyRelease = false;
+	Entity secondPlayer;
+	secondPlayer.r.w = 32;
+	secondPlayer.r.h = 32;
+	secondPlayer.r.x = windowWidth - secondPlayer.r.w;
+	secondPlayer.r.y = 0;
+	secondPlayer.t = IMG_LoadTexture(renderer, "res/player2.png");
+	secondPlayer.speed = PLAYER_SPEED;
+	bool secondPlayerSlowDownOnAccelerationKeyRelease = false;
+	std::vector<Entity> bullets;
 
 	/*
 	l-line
@@ -482,78 +551,338 @@ int main(int argc, char* argv[])
 		circle.y = position.y;
 		// TOOO: They cannot collide with other objects
 	}
+#if 1 // INIT_MENU_STATE
+	int buttonSplit = 5;
+	Button onePlayerBtn;
+	onePlayerBtn.r.w = 100;
+	onePlayerBtn.r.h = 30;
+	onePlayerBtn.r.x = windowWidth / 2 - onePlayerBtn.r.w - buttonSplit;
+	onePlayerBtn.r.y = windowHeight / 2 - onePlayerBtn.r.h / 2;
+	onePlayerBtn.text.setText(renderer, robotoF, "1");
+	onePlayerBtn.text.adjustSize(0.3, 0.3);
+	onePlayerBtn.text.dstR.x = onePlayerBtn.r.x + onePlayerBtn.r.w / 2 - onePlayerBtn.text.dstR.w / 2;
+	onePlayerBtn.text.dstR.y = onePlayerBtn.r.y + onePlayerBtn.r.h / 2 - onePlayerBtn.text.dstR.h / 2;
+	onePlayerBtn.color = { 0, 150, 150 };
+	Button twoPlayersBtn;
+	twoPlayersBtn.r.w = 100;
+	twoPlayersBtn.r.h = 30;
+	twoPlayersBtn.r.x = windowWidth / 2 + buttonSplit;
+	twoPlayersBtn.r.y = windowHeight / 2 - twoPlayersBtn.r.h / 2;
+	twoPlayersBtn.text.setText(renderer, robotoF, "2");
+	twoPlayersBtn.text.adjustSize(0.3, 0.3);
+	twoPlayersBtn.text.dstR.x = twoPlayersBtn.r.x + twoPlayersBtn.r.w / 2 - twoPlayersBtn.text.dstR.w / 2;
+	twoPlayersBtn.text.dstR.y = twoPlayersBtn.r.y + twoPlayersBtn.r.h / 2 - twoPlayersBtn.text.dstR.h / 2;
+	twoPlayersBtn.color = { 0, 150, 150 };
+	Text playerCountTxt;
+	playerCountTxt.setText(renderer, robotoF, "Amount of players:");
+	playerCountTxt.adjustSize(0.2, 0.32);
+	playerCountTxt.dstR.x = windowWidth / 2 - playerCountTxt.dstR.w / 2;
+	playerCountTxt.dstR.y = onePlayerBtn.r.y - playerCountTxt.dstR.h - 5;
+	int playerCount = 1;
+#endif
+
+	State state = State::Menu;
 
 	while (running) {
-		SDL_Event event;
-		while (SDL_PollEvent(&event)) {
-			if (event.type == SDL_QUIT || event.type == SDL_KEYDOWN && event.key.keysym.scancode == SDL_SCANCODE_ESCAPE) {
-				running = false;
-				// TODO: On mobile remember to use eventWatch function (it doesn't reach this code when terminating)
+		if (state == State::Game) {
+			SDL_Event event;
+			while (SDL_PollEvent(&event)) {
+				if (event.type == SDL_QUIT || event.type == SDL_KEYDOWN && event.key.keysym.scancode == SDL_SCANCODE_ESCAPE) {
+					running = false;
+					// TODO: On mobile remember to use eventWatch function (it doesn't reach this code when terminating)
+				}
+				if (event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_RESIZED) {
+					//SDL_RenderSetScale(renderer, event.window.data1 / (float)windowWidth, event.window.data2 / (float)windowHeight);
+				}
+				if (event.type == SDL_KEYDOWN) {
+					keys[event.key.keysym.scancode] = true;
+					if (event.key.keysym.scancode == SDL_SCANCODE_W) {
+						firstPlayerSlowDownOnAccelerationKeyRelease = true;
+					}
+					if (event.key.keysym.scancode == SDL_SCANCODE_UP) {
+						secondPlayerSlowDownOnAccelerationKeyRelease = true;
+					}
+				}
+				if (event.type == SDL_KEYUP) {
+					keys[event.key.keysym.scancode] = false;
+				}
+				if (event.type == SDL_MOUSEBUTTONDOWN) {
+					buttons[event.button.button] = true;
+				}
+				if (event.type == SDL_MOUSEBUTTONUP) {
+					buttons[event.button.button] = false;
+				}
+				if (event.type == SDL_MOUSEMOTION) {
+					float scaleX, scaleY;
+					SDL_RenderGetScale(renderer, &scaleX, &scaleY);
+					mousePos.x = event.motion.x / scaleX;
+					mousePos.y = event.motion.y / scaleY;
+					realMousePos.x = event.motion.x;
+					realMousePos.y = event.motion.y;
+				}
 			}
-			if (event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_RESIZED) {
-				//SDL_RenderSetScale(renderer, event.window.data1 / (float)windowWidth, event.window.data2 / (float)windowHeight);
+			if (keys[SDL_SCANCODE_A]) {
+				if (firstPlayer.angle < 0) {
+					firstPlayer.angle = 360.0;
+				}
+				else {
+					firstPlayer.angle -= PLAYER_ROTATION_SPEED;
+				}
 			}
-			if (event.type == SDL_KEYDOWN) {
-				keys[event.key.keysym.scancode] = true;
+			if (keys[SDL_SCANCODE_D]) {
+				if (firstPlayer.angle > 360) {
+					firstPlayer.angle = 0.0;
+				}
+				else {
+					firstPlayer.angle += PLAYER_ROTATION_SPEED;
+				}
 			}
-			if (event.type == SDL_KEYUP) {
-				keys[event.key.keysym.scancode] = false;
+			if (keys[SDL_SCANCODE_W]) {
+				firstPlayer.r.x -= std::sin(firstPlayer.angle * (M_PI / 180)) * firstPlayer.speed;
+				firstPlayer.r.y += std::cos(firstPlayer.angle * (M_PI / 180)) * firstPlayer.speed;
+				firstPlayer.speed += PLAYER_SPEED_INCREASE;
+				if (firstPlayer.speed > PLAYER_SPEED_LIMIT) {
+					firstPlayer.speed = PLAYER_SPEED_LIMIT;
+				}
+#if 1 // NOTE: Reflection from borders
+				if (firstPlayer.r.x < 0 || firstPlayer.r.x + firstPlayer.r.w > windowWidth) {
+					SDL_FPoint leftUpRotatedP = rotatePoint((float)firstPlayer.r.x + firstPlayer.r.w / 2, (float)firstPlayer.r.y + firstPlayer.r.y / 2, firstPlayer.angle, { firstPlayer.r.x, firstPlayer.r.y });
+					SDL_FPoint rightUpRotatedP = rotatePoint((float)firstPlayer.r.x + firstPlayer.r.w / 2, (float)firstPlayer.r.y + firstPlayer.r.y / 2, firstPlayer.angle, { firstPlayer.r.x + firstPlayer.r.w, firstPlayer.r.y });
+					SDL_FPoint rightDownRotatedP = rotatePoint((float)firstPlayer.r.x + firstPlayer.r.w / 2, (float)firstPlayer.r.y + firstPlayer.r.y / 2, firstPlayer.angle, { firstPlayer.r.x + firstPlayer.r.w, firstPlayer.r.y + firstPlayer.r.h });
+					SDL_FPoint leftDownRotatedP = rotatePoint((float)firstPlayer.r.x + firstPlayer.r.w / 2, (float)firstPlayer.r.y + firstPlayer.r.y / 2, firstPlayer.angle, { firstPlayer.r.x, firstPlayer.r.y + firstPlayer.r.h });
+					firstPlayer.speed = -firstPlayer.speed;
+					float highestX = std::max(leftUpRotatedP.x, rightUpRotatedP.x);
+					{
+						highestX = std::max(highestX, rightDownRotatedP.x);
+						highestX = std::max(highestX, leftDownRotatedP.x);
+						if (highestX > windowWidth) {
+							firstPlayer.speed = -firstPlayer.speed;
+							firstPlayer.r.x = windowWidth - firstPlayer.r.w * 2;
+						}
+					}
+					float highestY = std::max(leftUpRotatedP.y, rightUpRotatedP.y);
+					{
+						highestY = std::max(highestY, leftDownRotatedP.y);
+						highestY = std::max(highestY, rightDownRotatedP.y);
+						if (highestY > windowHeight) {
+							firstPlayer.speed = -firstPlayer.speed;
+							firstPlayer.r.y = windowHeight - firstPlayer.r.h * 2;
+						}
+					}
+					float lowestX = std::min(leftUpRotatedP.x, rightUpRotatedP.x);
+					{
+						lowestX = std::min(lowestX, rightDownRotatedP.x);
+						lowestX = std::min(lowestX, leftDownRotatedP.x);
+						if (lowestX < 0) {
+							firstPlayer.speed = -firstPlayer.speed;
+							firstPlayer.r.x = firstPlayer.r.w * 2;
+						}
+					}
+					float lowestY = std::min(leftUpRotatedP.y, rightUpRotatedP.y);
+					{
+						lowestY = std::min(lowestY, rightDownRotatedP.y);
+						lowestY = std::min(lowestY, leftDownRotatedP.y);
+						if (lowestY < 0) {
+							firstPlayer.speed = -firstPlayer.speed;
+							firstPlayer.r.y = firstPlayer.r.h * 2;
+						}
+					}
+				}
+#endif
 			}
-			if (event.type == SDL_MOUSEBUTTONDOWN) {
-				buttons[event.button.button] = true;
+			if (firstPlayerSlowDownOnAccelerationKeyRelease) {
+				firstPlayer.r.x -= std::sin(firstPlayer.angle * (M_PI / 180)) * firstPlayer.speed;
+				firstPlayer.r.y += std::cos(firstPlayer.angle * (M_PI / 180)) * firstPlayer.speed;
+				firstPlayer.speed -= PLAYER_SPEED_INCREASE; // TODO: Air resistance?
+				if (firstPlayer.speed <= PLAYER_SPEED) {
+					firstPlayer.speed = PLAYER_SPEED;
+					firstPlayerSlowDownOnAccelerationKeyRelease = false;
+				}
 			}
-			if (event.type == SDL_MOUSEBUTTONUP) {
-				buttons[event.button.button] = false;
+			if (keys[SDL_SCANCODE_SPACE]) {
+				bullets.push_back(Entity());
+				bullets.back() = firstPlayer;
+				bullets.back().t = bulletT;
 			}
-			if (event.type == SDL_MOUSEMOTION) {
-				float scaleX, scaleY;
-				SDL_RenderGetScale(renderer, &scaleX, &scaleY);
-				mousePos.x = event.motion.x / scaleX;
-				mousePos.y = event.motion.y / scaleY;
-				realMousePos.x = event.motion.x;
-				realMousePos.y = event.motion.y;
+#if 1 // NOTE: Player 2 code: should be same as player 1 but with other movement
+			if (keys[SDL_SCANCODE_LEFT]) {
+				if (firstPlayer.angle < 0) {
+					firstPlayer.angle = 360.0;
+				}
+				else {
+					firstPlayer.angle -= PLAYER_ROTATION_SPEED;
+				}
 			}
-		}
-		if (keys[SDL_SCANCODE_A]) {
-			if (angle < 0) angle = 360.0;
-			else angle -= PLAYER_ROTATION_SPEED;
-		}
-		if (keys[SDL_SCANCODE_D]) {
-			if (angle > 360) angle = 0.0;
-			else angle += PLAYER_ROTATION_SPEED;
-		}
-		if (keys[SDL_SCANCODE_W]) {
-			r.x -= sin(angle * (M_PI / 180)) * PLAYER_SPEED;
-			r.y += cos(angle * (M_PI / 180)) * PLAYER_SPEED;
-		}
-		for (Line& line : objects.lines) {
-			line.x1 += line.dx;
-			line.y1 += line.dy;
-			line.x2 += line.dx;
-			line.y2 += line.dy;
-			int maxX = std::max(line.x1, line.x2);
-			int maxY = std::max(line.y1, line.y2);
-			int minX = std::min(line.x1, line.x2);
-			int minY = std::min(line.y1, line.y2);
-			if (maxX > windowWidth || minX < 0) {
-				line.dx = -line.dx;
+			if (keys[SDL_SCANCODE_RIGHT]) {
+				if (firstPlayer.angle > 360) {
+					firstPlayer.angle = 0.0;
+				}
+				else {
+					firstPlayer.angle += PLAYER_ROTATION_SPEED;
+				}
 			}
-			if (maxY > windowHeight || minY < 0) {
-				line.dy = -line.dy;
+			if (keys[SDL_SCANCODE_UP]) {
+				firstPlayer.r.x -= std::sin(firstPlayer.angle * (M_PI / 180)) * firstPlayer.speed;
+				firstPlayer.r.y += std::cos(firstPlayer.angle * (M_PI / 180)) * firstPlayer.speed;
+				firstPlayer.speed += PLAYER_SPEED_INCREASE;
+				if (firstPlayer.speed > PLAYER_SPEED_LIMIT) {
+					firstPlayer.speed = PLAYER_SPEED_LIMIT;
+				}
+#if 1 // NOTE: Reflection from borders
+				if (secondPlayer.r.x < 0 || secondPlayer.r.x + secondPlayer.r.w > windowWidth) {
+					SDL_FPoint leftUpRotatedP = rotatePoint((float)secondPlayer.r.x + secondPlayer.r.w / 2, (float)secondPlayer.r.y + secondPlayer.r.y / 2, secondPlayer.angle, { secondPlayer.r.x, secondPlayer.r.y });
+					SDL_FPoint rightUpRotatedP = rotatePoint((float)secondPlayer.r.x + secondPlayer.r.w / 2, (float)secondPlayer.r.y + secondPlayer.r.y / 2, secondPlayer.angle, { secondPlayer.r.x + secondPlayer.r.w, secondPlayer.r.y });
+					SDL_FPoint rightDownRotatedP = rotatePoint((float)secondPlayer.r.x + secondPlayer.r.w / 2, (float)secondPlayer.r.y + secondPlayer.r.y / 2, secondPlayer.angle, { secondPlayer.r.x + secondPlayer.r.w, secondPlayer.r.y + secondPlayer.r.h });
+					SDL_FPoint leftDownRotatedP = rotatePoint((float)secondPlayer.r.x + secondPlayer.r.w / 2, (float)secondPlayer.r.y + secondPlayer.r.y / 2, secondPlayer.angle, { secondPlayer.r.x, secondPlayer.r.y + secondPlayer.r.h });
+					secondPlayer.speed = -secondPlayer.speed;
+					float highestX = std::max(leftUpRotatedP.x, rightUpRotatedP.x);
+					{
+						highestX = std::max(highestX, rightDownRotatedP.x);
+						highestX = std::max(highestX, leftDownRotatedP.x);
+						if (highestX > windowWidth) {
+							secondPlayer.speed = -secondPlayer.speed;
+							secondPlayer.r.x = windowWidth - secondPlayer.r.w * 2;
+						}
+					}
+					float highestY = std::max(leftUpRotatedP.y, rightUpRotatedP.y);
+					{
+						highestY = std::max(highestY, leftDownRotatedP.y);
+						highestY = std::max(highestY, rightDownRotatedP.y);
+						if (highestY > windowHeight) {
+							secondPlayer.speed = -secondPlayer.speed;
+							secondPlayer.r.y = windowHeight - secondPlayer.r.h * 2;
+						}
+					}
+					float lowestX = std::min(leftUpRotatedP.x, rightUpRotatedP.x);
+					{
+						lowestX = std::min(lowestX, rightDownRotatedP.x);
+						lowestX = std::min(lowestX, leftDownRotatedP.x);
+						if (lowestX < 0) {
+							secondPlayer.speed = -secondPlayer.speed;
+							secondPlayer.r.x = secondPlayer.r.w * 2;
+						}
+					}
+					float lowestY = std::min(leftUpRotatedP.y, rightUpRotatedP.y);
+					{
+						lowestY = std::min(lowestY, rightDownRotatedP.y);
+						lowestY = std::min(lowestY, leftDownRotatedP.y);
+						if (lowestY < 0) {
+							secondPlayer.speed = -secondPlayer.speed;
+							secondPlayer.r.y = secondPlayer.r.h * 2;
+						}
+					}
+				}
+#endif
 			}
-		}
-		for (Circle& circle : objects.circles) {
-			circle.move();
-		}
-		for (Circle& filledCircle : objects.filledCircles) {
-			filledCircle.move();
-		}
+			if (secondPlayerSlowDownOnAccelerationKeyRelease) {
+				secondPlayer.r.x -= std::sin(secondPlayer.angle * (M_PI / 180)) * secondPlayer.speed;
+				secondPlayer.r.y += std::cos(secondPlayer.angle * (M_PI / 180)) * secondPlayer.speed;
+				secondPlayer.speed -= PLAYER_SPEED_INCREASE; // TODO: Air resistance?
+				if (secondPlayer.speed <= PLAYER_SPEED) {
+					secondPlayer.speed = PLAYER_SPEED;
+					secondPlayerSlowDownOnAccelerationKeyRelease = false;
+				}
+			}
+			if (keys[SDL_SCANCODE_RETURN]) {
+				bullets.push_back(Entity());
+				bullets.back() = secondPlayer;
+				bullets.back().t = bulletT;
+			}
+#endif
+			for (Entity& b : bullets) {
+				b.r.x -= std::sin(b.angle * (M_PI / 180)) * b.speed;
+				b.r.y += std::cos(b.angle * (M_PI / 180)) * b.speed;
+			}
+			{
+				int i = 0;
+				for (Entity& b : bullets) {
+					if (b.r.x + b.r.w < 0 || b.r.x > windowWidth || b.r.y + b.r.h < 0 || b.r.y > windowHeight) {
+						bullets.erase(bullets.begin() + i--);
+					}
+					++i;
+				}
+			}
+			for (Line& line : objects.lines) {
+				line.x1 += line.dx;
+				line.y1 += line.dy;
+				line.x2 += line.dx;
+				line.y2 += line.dy;
+				int maxX = std::max(line.x1, line.x2);
+				int maxY = std::max(line.y1, line.y2);
+				int minX = std::min(line.x1, line.x2);
+				int minY = std::min(line.y1, line.y2);
+				if (maxX > windowWidth || minX < 0) {
+					line.dx = -line.dx;
+				}
+				if (maxY > windowHeight || minY < 0) {
+					line.dy = -line.dy;
+				}
+			}
+			for (Circle& circle : objects.circles) {
+				circle.move();
+			}
+			for (Circle& filledCircle : objects.filledCircles) {
+				filledCircle.move();
+			}
 
-		SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
-		SDL_RenderClear(renderer);
-		SDL_RenderCopyEx(renderer, playerT, 0, &r, angle, 0, SDL_FLIP_NONE);
-		objects.draw(renderer);
-		SDL_RenderPresent(renderer);
+			SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
+			SDL_RenderClear(renderer);
+			firstPlayer.draw(renderer);
+			if (playerCount == 2) {
+				secondPlayer.draw(renderer);
+			}
+			objects.draw(renderer);
+			for (Entity& bullet : bullets) {
+				bullet.draw(renderer);
+			}
+			SDL_RenderPresent(renderer);
+		}
+		else if (state == State::Menu) {
+			SDL_Event event;
+			while (SDL_PollEvent(&event)) {
+				if (event.type == SDL_QUIT || event.type == SDL_KEYDOWN && event.key.keysym.scancode == SDL_SCANCODE_ESCAPE) {
+					running = false;
+					// TODO: On mobile remember to use eventWatch function (it doesn't reach this code when terminating)
+				}
+				if (event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_RESIZED) {
+					//SDL_RenderSetScale(renderer, event.window.data1 / (float)windowWidth, event.window.data2 / (float)windowHeight);
+				}
+				if (event.type == SDL_KEYDOWN) {
+					keys[event.key.keysym.scancode] = true;
+				}
+				if (event.type == SDL_KEYUP) {
+					keys[event.key.keysym.scancode] = false;
+				}
+				if (event.type == SDL_MOUSEBUTTONDOWN) {
+					buttons[event.button.button] = true;
+					if (SDL_PointInRect(&mousePos, &onePlayerBtn.r)) {
+						playerCount = 1;
+						state = State::Game;
+					}
+					else if (SDL_PointInRect(&mousePos, &twoPlayersBtn.r)) {
+						playerCount = 2;
+						state = State::Game;
+					}
+				}
+				if (event.type == SDL_MOUSEBUTTONUP) {
+					buttons[event.button.button] = false;
+				}
+				if (event.type == SDL_MOUSEMOTION) {
+					float scaleX, scaleY;
+					SDL_RenderGetScale(renderer, &scaleX, &scaleY);
+					mousePos.x = event.motion.x / scaleX;
+					mousePos.y = event.motion.y / scaleY;
+					realMousePos.x = event.motion.x;
+					realMousePos.y = event.motion.y;
+				}
+			}
+			SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
+			SDL_RenderClear(renderer);
+			playerCountTxt.draw(renderer);
+			onePlayerBtn.draw(renderer);
+			twoPlayersBtn.draw(renderer);
+			SDL_RenderPresent(renderer);
+		}
 	}
 	// TODO: On mobile remember to use eventWatch function (it doesn't reach this code when terminating)
 	return 0;
