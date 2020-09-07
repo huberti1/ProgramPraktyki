@@ -57,6 +57,8 @@ bool buttons[SDL_BUTTON_X2 + 1];
 #define PLAYER_ROTATION_SPEED 0.1
 #define PI 3.14159265358979323846
 #define PLAYER_SPEED  2
+#define PLAYER_ACCELERATION 0.0001
+#define AIR_RESISTANCE 0.001
 
 
 void logOutputCallback(void* userdata, int category, SDL_LogPriority priority, const char* message)
@@ -408,6 +410,34 @@ Objects readObjects(std::string file)
 	return objects;
 }
 
+
+struct Player {
+	double angle;
+	float Xposition,
+		  Yposition,
+		  playerSpeed;
+	SDL_Rect r;
+
+	Player()
+	{
+		angle = 0.0;
+		Xposition = 0.0;
+		Yposition = 0.0;
+		playerSpeed = 0.0;
+		r.w = 32;
+		r.h = 32;
+		r.x = 0;
+		r.y = 0;
+	}
+	void movePlayer()
+	{
+		Xposition -= sin(angle * (M_PI / 180)) * playerSpeed;
+		Yposition += cos(angle * (M_PI / 180)) * playerSpeed;
+		r.x = Xposition;
+		r.y = Yposition;
+	}
+};
+
 int main(int argc, char* argv[])
 {
 	std::srand(std::time(0));
@@ -435,15 +465,8 @@ int main(int argc, char* argv[])
 	bool running = true;
 	SDL_AddTimer(20, my_callbackfunc, 0);
 
-	double angle = 0;
-	SDL_Rect r;
-	r.w = 32;
-	r.h = 32;
-	r.x = 0;
-	r.y = 0;
-
 	SDL_Texture* playerT = IMG_LoadTexture(renderer, "res/test.bmp");
-
+	Player player1;
 	/*
 	l-line
 	c-circle
@@ -515,16 +538,22 @@ int main(int argc, char* argv[])
 			}
 		}
 		if (keys[SDL_SCANCODE_A]) {
-			if (angle < 0) angle = 360.0;
-			else angle -= PLAYER_ROTATION_SPEED;
+			if (player1.angle < 0) player1.angle = 360.0;
+			player1.angle -= PLAYER_ROTATION_SPEED;
 		}
 		if (keys[SDL_SCANCODE_D]) {
-			if (angle > 360) angle = 0.0;
-			else angle += PLAYER_ROTATION_SPEED;
+			if (player1.angle > 360) player1.angle = 0.0;
+			player1.angle += PLAYER_ROTATION_SPEED;
 		}
 		if (keys[SDL_SCANCODE_W]) {
-			r.x -= sin(angle * (M_PI / 180)) * PLAYER_SPEED;
-			r.y += cos(angle * (M_PI / 180)) * PLAYER_SPEED;
+			if (player1.playerSpeed < 0.4) {
+				player1.playerSpeed += PLAYER_ACCELERATION;
+			}
+			player1.movePlayer();
+		}
+		else if (player1.playerSpeed > 0.0) {
+			player1.playerSpeed -= AIR_RESISTANCE;
+			player1.movePlayer();
 		}
 		for (Line& line : objects.lines) {
 			line.x1 += line.dx;
@@ -551,7 +580,7 @@ int main(int argc, char* argv[])
 
 		SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
 		SDL_RenderClear(renderer);
-		SDL_RenderCopyEx(renderer, playerT, 0, &r, angle, 0, SDL_FLIP_NONE);
+		SDL_RenderCopyEx(renderer, playerT, 0, &player1.r, player1.angle, 0, SDL_FLIP_NONE);
 		objects.draw(renderer);
 		SDL_RenderPresent(renderer);
 	}
