@@ -307,6 +307,7 @@ struct Line {
 	SDL_Color color{};
 	int dx = 1;
 	int dy = -1;
+	int energy = 3;
 };
 
 struct Circle {
@@ -315,6 +316,7 @@ struct Circle {
 	int dx = 1;
 	int dy = -1;
 	int speed = random(1, 10);
+	int energy = 3;
 
 	void move()
 	{
@@ -440,6 +442,7 @@ struct Entity {
 	SDL_Texture* t = 0;
 	float angle = 0;
 	float speed = 0.1;
+	int energy = 100;
 
 	void draw(SDL_Renderer* renderer)
 	{
@@ -467,6 +470,71 @@ SDL_FPoint rotatePoint(float cx, float cy, float angle, SDL_FPoint p)
 	return p;
 }
 
+SDL_FORCE_INLINE SDL_bool SDL_RectEmpty(const SDL_FRect* r)
+{
+	return ((!r) || (r->w <= 0) || (r->h <= 0)) ? SDL_TRUE : SDL_FALSE;
+}
+
+SDL_bool SDL_HasIntersection(const SDL_FRect* A, const SDL_FRect* B)
+{
+	int Amin, Amax, Bmin, Bmax;
+
+	if (!A) {
+		SDL_InvalidParamError("A");
+		return SDL_FALSE;
+	}
+
+	if (!B) {
+		SDL_InvalidParamError("B");
+		return SDL_FALSE;
+	}
+
+	/* Special cases for empty rects */
+	if (SDL_RectEmpty(A) || SDL_RectEmpty(B)) {
+		return SDL_FALSE;
+	}
+
+	/* Horizontal intersection */
+	Amin = A->x;
+	Amax = Amin + A->w;
+	Bmin = B->x;
+	Bmax = Bmin + B->w;
+	if (Bmin > Amin)
+		Amin = Bmin;
+	if (Bmax < Amax)
+		Amax = Bmax;
+	if (Amax <= Amin)
+		return SDL_FALSE;
+
+	/* Vertical intersection */
+	Amin = A->y;
+	Amax = Amin + A->h;
+	Bmin = B->y;
+	Bmax = Bmin + B->h;
+	if (Bmin > Amin)
+		Amin = Bmin;
+	if (Bmax < Amax)
+		Amax = Bmax;
+	if (Amax <= Amin)
+		return SDL_FALSE;
+
+	return SDL_TRUE;
+}
+
+SDL_FRect lineToFRect(Line line)
+{
+	SDL_FRect lineR;
+	float angle = std::atan2(line.y2 - line.y1, line.x2 - line.x1) * 180 / M_PI;
+	lineR.w = std::fabs(line.x1 - line.x2);
+	lineR.h = std::fabs(line.y1 - line.y2);
+	lineR.x = line.x1; // TODO: Is it ok?
+	lineR.y = line.y1; // TODO: Is it ok?
+	SDL_FPoint rotatedP = rotatePoint(lineR.x + lineR.w / 2, lineR.y + lineR.h / 2, angle, { lineR.x, lineR.y });
+	lineR.x = rotatedP.x;
+	lineR.y = rotatedP.y;
+	return lineR;
+}
+
 int main(int argc, char* argv[])
 {
 	std::srand(std::time(0));
@@ -475,7 +543,6 @@ int main(int argc, char* argv[])
 	SDL_Init(SDL_INIT_EVERYTHING);
 	TTF_Init();
 	SDL_GetMouseState(&mousePos.x, &mousePos.y);
-	// TODO: SDL2 not multiple monitor support ???
 #if 1 // TODO: Remember to turn it off on reelase
 	SDL_Window * window = SDL_CreateWindow("ProgramPraktyki", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, windowWidth, windowHeight, SDL_WINDOW_RESIZABLE);
 #else
@@ -494,6 +561,7 @@ int main(int argc, char* argv[])
 	bool running = true;
 	SDL_AddTimer(20, my_callbackfunc, 0);
 
+gameBegin:
 	SDL_Texture* bulletT = IMG_LoadTexture(renderer, "res/bullet.png");
 	Entity firstPlayer;
 	firstPlayer.r.w = 32;
@@ -512,6 +580,12 @@ int main(int argc, char* argv[])
 	secondPlayer.speed = PLAYER_SPEED;
 	bool secondPlayerSlowDownOnAccelerationKeyRelease = false;
 	std::vector<Entity> bullets;
+
+	Text pointsTxt;
+	pointsTxt.setText(renderer, robotoF, "0");
+	pointsTxt.adjustSize(0.3, 0.3);
+	pointsTxt.dstR.x = windowWidth / 2 - pointsTxt.dstR.w / 2;
+	pointsTxt.dstR.y = 5;
 
 	/*
 	l-line
@@ -533,6 +607,8 @@ int main(int argc, char* argv[])
 			// TOOO: They cannot collide with other objects
 			for (int j = 0; j < i; ++j) {
 				// TODO: line-line collision detection or convert Line into SDL_Rect
+				// TOOD: IF it collides with previous line randomize it's position one more time
+				//lineToFRect()
 			}
 			++i;
 		}
@@ -824,6 +900,81 @@ int main(int argc, char* argv[])
 			for (Circle& filledCircle : objects.filledCircles) {
 				filledCircle.move();
 			}
+			// TODO: Bullet - element collsision and player - element collision
+			{
+				int i = 0;
+				for (Circle& circle : objects.circles) {
+					SDL_FRect circleR;
+					circleR.w = circle.r * 2;
+					circleR.h = circle.r * 2;
+					circleR.x = circle.x - circle.r;
+					circleR.y = circle.y - circle.r;
+					int j = 0;
+					for (Entity& b : bullets) {
+						if (SDL_HasIntersection(&circleR, &b.r)) {
+							bullets.erase(bullets.begin() + j--);
+							if (--circle.energy <= 0) {
+								objects.circles.erase(objects.circles.begin() + i--);
+								int points = std::stoi(pointsTxt.text);
+								++points;
+								pointsTxt.setText(renderer, robotoF, std::to_string(points));
+								break;
+							}
+						}
+						++j;
+					}
+					++i;
+				}
+			}
+			{
+				int i = 0;
+				for (Circle& filledCircle : objects.filledCircles) {
+					SDL_FRect circleR;
+					circleR.w = filledCircle.r * 2;
+					circleR.h = filledCircle.r * 2;
+					circleR.x = filledCircle.x - filledCircle.r;
+					circleR.y = filledCircle.y - filledCircle.r;
+					int j = 0;
+					for (Entity& b : bullets) {
+						if (SDL_HasIntersection(&circleR, &b.r)) {
+							bullets.erase(bullets.begin() + j--);
+							if (--filledCircle.energy <= 0) {
+								objects.filledCircles.erase(objects.filledCircles.begin() + i--);
+								int points = std::stoi(pointsTxt.text);
+								++points;
+								pointsTxt.setText(renderer, robotoF, std::to_string(points));
+								break;
+							}
+						}
+						++j;
+					}
+					++i;
+				}
+			}
+			{
+				int i = 0;
+				for (Line& line : objects.lines) {
+					SDL_FRect lineR = lineToFRect(line);
+					int j = 0;
+					for (Entity& b : bullets) {
+						if (SDL_HasIntersection(&lineR, &b.r)) {
+							bullets.erase(bullets.begin() + j--);
+							if (--line.energy <= 0) {
+								objects.lines.erase(objects.lines.begin() + i--);
+								int points = std::stoi(pointsTxt.text);
+								++points;
+								pointsTxt.setText(renderer, robotoF, std::to_string(points));
+								break;
+							}
+						}
+						++j;
+					}
+					++i;
+				}
+			}
+			if (objects.circles.empty() && objects.filledCircles.empty() && objects.lines.empty()) {
+				goto gameBegin;
+			}
 
 			SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
 			SDL_RenderClear(renderer);
@@ -835,6 +986,7 @@ int main(int argc, char* argv[])
 			for (Entity& bullet : bullets) {
 				bullet.draw(renderer);
 			}
+			pointsTxt.draw(renderer);
 			SDL_RenderPresent(renderer);
 		}
 		else if (state == State::Menu) {
