@@ -659,7 +659,7 @@ gameBegin:
 			circle.x = position.x;
 			circle.y = position.y;
 		collisionCheckBegin2:
-			for (int j = 0; j < i; ++j) {
+			for (int j = 0; j < objects.lines.size(); ++j) {
 				SDL_FRect r = circleToRect(objects.circles[i]);
 				SDL_FRect r2 = lineToFRect(objects.lines[j]);
 				if (SDL_HasIntersection(&r, &r2)) {
@@ -668,7 +668,7 @@ gameBegin:
 					goto collisionCheckBegin2;
 				}
 			}
-			for (int j = 0; j < objects.circles.size(); ++j) {
+			for (int j = 0; j < i; ++j) {
 				SDL_FRect r = circleToRect(objects.circles[i]);
 				SDL_FRect r2 = circleToRect(objects.circles[j]);
 				if (SDL_HasIntersection(&r, &r2)) {
@@ -714,7 +714,7 @@ gameBegin:
 					goto collisionCheckBegin3;
 				}
 			}
-			for (int j = 0; j < objects.filledCircles.size(); ++j) {
+			for (int j = 0; j < i; ++j) {
 				SDL_FRect r = circleToRect(objects.filledCircles[i]);
 				SDL_FRect r2 = circleToRect(objects.filledCircles[j]);
 				if (SDL_HasIntersection(&r, &r2)) {
@@ -727,20 +727,6 @@ gameBegin:
 		}
 	}
 #endif
-	// TODO: Does it make sense to randomize position of circles when they are in file already?
-	for (Circle& circle : objects.circles) {
-		SDL_Point position = { random(circle.r, windowWidth - circle.r), random(circle.r, windowHeight - circle.r) };
-		circle.x = position.x;
-		circle.y = position.y;
-		// TOOO: They cannot collide with other objects
-
-	}
-	for (Circle& circle : objects.filledCircles) {
-		SDL_Point position = { random(circle.r, windowWidth - circle.r), random(circle.r, windowHeight - circle.r) };
-		circle.x = position.x;
-		circle.y = position.y;
-		// TOOO: They cannot collide with other objects
-	}
 #if 1 // INIT_MENU_STATE
 	int buttonSplit = 5;
 	Button onePlayerBtn;
@@ -1014,7 +1000,7 @@ gameBegin:
 			for (Circle& filledCircle : objects.filledCircles) {
 				filledCircle.move();
 			}
-			// TODO: Bullet - element collsision and player - element collision
+#if 1 // NOTE: Bullet - element collision
 			{
 				int i = 0;
 				for (Circle& circle : objects.circles) {
@@ -1082,6 +1068,83 @@ gameBegin:
 					++i;
 				}
 			}
+#endif
+#if 1 // NOTE: Player-element collision
+			{
+				int i = 0;
+				for (Line& line : objects.lines) {
+					SDL_FRect lineR = lineToFRect(line);
+					if (SDL_HasIntersection(&firstPlayer.r, &lineR)) {
+						if (--line.energy <= 0) {
+							objects.lines.erase(objects.lines.begin() + i--);
+							int points = std::stoi(pointsTxt.text);
+							++points;
+							pointsTxt.setText(renderer, robotoF, std::to_string(points));
+							break;
+						}
+					}
+					if (SDL_HasIntersection(&secondPlayer.r, &lineR)) {
+						if (--line.energy <= 0) {
+							objects.lines.erase(objects.lines.begin() + i--);
+							int points = std::stoi(pointsTxt.text);
+							++points;
+							pointsTxt.setText(renderer, robotoF, std::to_string(points));
+							break;
+						}
+					}
+				}
+			}
+			{
+				int i = 0;
+				for (Circle& circle : objects.circles) {
+					SDL_FRect circleR = circleToRect(circle);
+					if (SDL_HasIntersection(&circleR, &firstPlayer.r)) {
+						if (--circle.energy <= 0) {
+							objects.circles.erase(objects.circles.begin() + i--);
+							int points = std::stoi(pointsTxt.text);
+							++points;
+							pointsTxt.setText(renderer, robotoF, std::to_string(points));
+							break;
+						}
+					}
+					if (SDL_HasIntersection(&circleR, &secondPlayer.r)) {
+						if (--circle.energy <= 0) {
+							objects.circles.erase(objects.circles.begin() + i--);
+							int points = std::stoi(pointsTxt.text);
+							++points;
+							pointsTxt.setText(renderer, robotoF, std::to_string(points));
+							break;
+						}
+					}
+					++i;
+				}
+			}
+			{
+				int i = 0;
+				for (Circle& filledCircle : objects.filledCircles) {
+					SDL_FRect circleR = circleToRect(filledCircle);
+					if (SDL_HasIntersection(&circleR, &firstPlayer.r)) {
+						if (--filledCircle.energy <= 0) {
+							objects.filledCircles.erase(objects.filledCircles.begin() + i--);
+							int points = std::stoi(pointsTxt.text);
+							++points;
+							pointsTxt.setText(renderer, robotoF, std::to_string(points));
+							break;
+						}
+					}
+					if (SDL_HasIntersection(&circleR, &secondPlayer.r)) {
+						if (--filledCircle.energy <= 0) {
+							objects.filledCircles.erase(objects.filledCircles.begin() + i--);
+							int points = std::stoi(pointsTxt.text);
+							++points;
+							pointsTxt.setText(renderer, robotoF, std::to_string(points));
+							break;
+						}
+					}
+					++i;
+				}
+			}
+#endif
 			if (objects.circles.empty() && objects.filledCircles.empty() && objects.lines.empty()) {
 				goto gameBegin;
 			}
