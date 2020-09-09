@@ -535,6 +535,16 @@ SDL_FRect lineToFRect(Line line)
 	return lineR;
 }
 
+SDL_FRect circleToRect(Circle circle)
+{
+	SDL_FRect circleR;
+	circleR.w = circle.r * 2;
+	circleR.h = circle.r * 2;
+	circleR.x = circle.x - circle.r;
+	circleR.y = circle.y - circle.r;
+	return circleR;
+}
+
 int main(int argc, char* argv[])
 {
 	std::srand(std::time(0));
@@ -595,24 +605,128 @@ gameBegin:
 	*/
 	std::string movingFile = readWholeFile("res/ruchome.txt");
 	Objects objects = readObjects(movingFile);
+#if 1 // NOTE: If there is collision randomize position one more time
 	{
 		int i = 0;
 		for (Line& line : objects.lines) {
 			int length = std::abs(line.x2 - line.x1);
 			SDL_Point position = { random(0, windowWidth - length), random(0, windowHeight - length) };
-			line.x1 += position.x;
-			line.y1 += position.y;
-			line.x2 += position.x;
-			line.y2 += position.y;
-			// TOOO: They cannot collide with other objects
+			line.x1 = position.x;
+			line.y1 = position.y;
+			line.x2 = position.x;
+			line.y2 = position.y;
+		collisionCheckBegin:
 			for (int j = 0; j < i; ++j) {
-				// TODO: line-line collision detection or convert Line into SDL_Rect
-				// TOOD: IF it collides with previous line randomize it's position one more time
-				//lineToFRect()
+				SDL_FRect r = lineToFRect(objects.lines[i]);
+				SDL_FRect r2 = lineToFRect(objects.lines[j]);
+				if (SDL_HasIntersection(&r, &r2)) {
+					line.x1 = position.x;
+					line.y1 = position.y;
+					line.x2 = position.x;
+					line.y2 = position.y;
+					goto collisionCheckBegin;
+				}
+			}
+			for (int j = 0; j < objects.circles.size(); ++j) {
+				SDL_FRect r = lineToFRect(objects.lines[i]);
+				SDL_FRect r2 = circleToRect(objects.circles[j]);
+				if (SDL_HasIntersection(&r, &r2)) {
+					line.x1 = position.x;
+					line.y1 = position.y;
+					line.x2 = position.x;
+					line.y2 = position.y;
+					goto collisionCheckBegin;
+				}
+			}
+			for (int j = 0; j < objects.filledCircles.size(); ++j) {
+				SDL_FRect r = lineToFRect(objects.lines[i]);
+				SDL_FRect r2 = circleToRect(objects.filledCircles[j]);
+				if (SDL_HasIntersection(&r, &r2)) {
+					line.x1 = position.x;
+					line.y1 = position.y;
+					line.x2 = position.x;
+					line.y2 = position.y;
+					goto collisionCheckBegin;
+				}
 			}
 			++i;
 		}
 	}
+	{
+		int i = 0;
+		for (Circle& circle : objects.circles) {
+			SDL_Point position = { random(circle.r, windowWidth - circle.r), random(circle.r, windowHeight - circle.r) };
+			circle.x = position.x;
+			circle.y = position.y;
+		collisionCheckBegin2:
+			for (int j = 0; j < i; ++j) {
+				SDL_FRect r = circleToRect(objects.circles[i]);
+				SDL_FRect r2 = lineToFRect(objects.lines[j]);
+				if (SDL_HasIntersection(&r, &r2)) {
+					circle.x = position.x;
+					circle.y = position.y;
+					goto collisionCheckBegin2;
+				}
+			}
+			for (int j = 0; j < objects.circles.size(); ++j) {
+				SDL_FRect r = circleToRect(objects.circles[i]);
+				SDL_FRect r2 = circleToRect(objects.circles[j]);
+				if (SDL_HasIntersection(&r, &r2)) {
+					circle.x = position.x;
+					circle.y = position.y;
+					goto collisionCheckBegin2;
+				}
+			}
+			for (int j = 0; j < objects.filledCircles.size(); ++j) {
+				SDL_FRect r = circleToRect(objects.circles[i]);
+				SDL_FRect r2 = circleToRect(objects.filledCircles[j]);
+				if (SDL_HasIntersection(&r, &r2)) {
+					circle.x = position.x;
+					circle.y = position.y;
+					goto collisionCheckBegin2;
+				}
+			}
+			++i;
+		}
+	}
+	{
+		int i = 0;
+		for (Circle& filledCircle : objects.filledCircles) {
+			SDL_Point position = { random(filledCircle.r, windowWidth - filledCircle.r), random(filledCircle.r, windowHeight - filledCircle.r) };
+			filledCircle.x = position.x;
+			filledCircle.y = position.y;
+		collisionCheckBegin3:
+			for (int j = 0; j < i; ++j) {
+				SDL_FRect r = circleToRect(objects.filledCircles[i]);
+				SDL_FRect r2 = lineToFRect(objects.lines[j]);
+				if (SDL_HasIntersection(&r, &r2)) {
+					filledCircle.x = position.x;
+					filledCircle.y = position.y;
+					goto collisionCheckBegin3;
+				}
+			}
+			for (int j = 0; j < objects.circles.size(); ++j) {
+				SDL_FRect r = circleToRect(objects.filledCircles[i]);
+				SDL_FRect r2 = circleToRect(objects.circles[j]);
+				if (SDL_HasIntersection(&r, &r2)) {
+					filledCircle.x = position.x;
+					filledCircle.y = position.y;
+					goto collisionCheckBegin3;
+				}
+			}
+			for (int j = 0; j < objects.filledCircles.size(); ++j) {
+				SDL_FRect r = circleToRect(objects.filledCircles[i]);
+				SDL_FRect r2 = circleToRect(objects.filledCircles[j]);
+				if (SDL_HasIntersection(&r, &r2)) {
+					filledCircle.x = position.x;
+					filledCircle.y = position.y;
+					goto collisionCheckBegin3;
+				}
+			}
+			++i;
+		}
+	}
+#endif
 	// TODO: Does it make sense to randomize position of circles when they are in file already?
 	for (Circle& circle : objects.circles) {
 		SDL_Point position = { random(circle.r, windowWidth - circle.r), random(circle.r, windowHeight - circle.r) };
@@ -904,11 +1018,7 @@ gameBegin:
 			{
 				int i = 0;
 				for (Circle& circle : objects.circles) {
-					SDL_FRect circleR;
-					circleR.w = circle.r * 2;
-					circleR.h = circle.r * 2;
-					circleR.x = circle.x - circle.r;
-					circleR.y = circle.y - circle.r;
+					SDL_FRect circleR = circleToRect(circle);
 					int j = 0;
 					for (Entity& b : bullets) {
 						if (SDL_HasIntersection(&circleR, &b.r)) {
