@@ -521,6 +521,104 @@ SDL_bool SDL_HasIntersection(const SDL_FRect* A, const SDL_FRect* B)
 	return SDL_TRUE;
 }
 
+SDL_bool SDL_IntersectRectAndLine(const SDL_FRect* rect, int* X1, int* Y1, int* X2, int* Y2)
+{
+	int x = 0;
+	int y = 0;
+	int x1, y1;
+	int x2, y2;
+	int rectx1;
+	int recty1;
+	int rectx2;
+	int recty2;
+	int outcode1, outcode2;
+
+	if (!rect) {
+		SDL_InvalidParamError("rect");
+		return SDL_FALSE;
+	}
+
+	if (!X1) {
+		SDL_InvalidParamError("X1");
+		return SDL_FALSE;
+	}
+
+	if (!Y1) {
+		SDL_InvalidParamError("Y1");
+		return SDL_FALSE;
+	}
+
+	if (!X2) {
+		SDL_InvalidParamError("X2");
+		return SDL_FALSE;
+	}
+
+	if (!Y2) {
+		SDL_InvalidParamError("Y2");
+		return SDL_FALSE;
+	}
+
+	/* Special case for empty rect */
+	if (SDL_RectEmpty(rect)) {
+		return SDL_FALSE;
+	}
+
+	x1 = *X1;
+	y1 = *Y1;
+	x2 = *X2;
+	y2 = *Y2;
+	rectx1 = rect->x;
+	recty1 = rect->y;
+	rectx2 = rect->x + rect->w - 1;
+	recty2 = rect->y + rect->h - 1;
+
+	/* Check to see if entire line is inside rect */
+	if (x1 >= rectx1 && x1 <= rectx2 && x2 >= rectx1 && x2 <= rectx2 &&
+		y1 >= recty1 && y1 <= recty2 && y2 >= recty1 && y2 <= recty2) {
+		return SDL_TRUE;
+	}
+
+	/* Check to see if entire line is to one side of rect */
+	if ((x1 < rectx1 && x2 < rectx1) || (x1 > rectx2 && x2 > rectx2) ||
+		(y1 < recty1 && y2 < recty1) || (y1 > recty2 && y2 > recty2)) {
+		return SDL_FALSE;
+	}
+
+	if (y1 == y2) {
+		/* Horizontal line, easy to clip */
+		if (x1 < rectx1) {
+			*X1 = rectx1;
+		}
+		else if (x1 > rectx2) {
+			*X1 = rectx2;
+		}
+		if (x2 < rectx1) {
+			*X2 = rectx1;
+		}
+		else if (x2 > rectx2) {
+			*X2 = rectx2;
+		}
+		return SDL_TRUE;
+	}
+
+	if (x1 == x2) {
+		/* Vertical line, easy to clip */
+		if (y1 < recty1) {
+			*Y1 = recty1;
+		}
+		else if (y1 > recty2) {
+			*Y1 = recty2;
+		}
+		if (y2 < recty1) {
+			*Y2 = recty1;
+		}
+		else if (y2 > recty2) {
+			*Y2 = recty2;
+		}
+		return SDL_TRUE;
+	}
+}
+
 SDL_FRect lineToFRect(Line line)
 {
 	SDL_FRect lineR;
@@ -547,12 +645,14 @@ SDL_FRect circleToRect(Circle circle)
 
 int main(int argc, char* argv[])
 {
+	
 	std::srand(std::time(0));
 	SDL_LogSetAllPriority(SDL_LOG_PRIORITY_VERBOSE);
 	SDL_LogSetOutputFunction(logOutputCallback, 0);
 	SDL_Init(SDL_INIT_EVERYTHING);
 	TTF_Init();
 	SDL_GetMouseState(&mousePos.x, &mousePos.y);
+
 #if 1 // TODO: Remember to turn it off on reelase
 	SDL_Window * window = SDL_CreateWindow("ProgramPraktyki", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, windowWidth, windowHeight, SDL_WINDOW_RESIZABLE);
 #else
@@ -562,6 +662,7 @@ int main(int argc, char* argv[])
 	windowWidth = dm.w;
 	windowHeight = dm.h;
 #endif
+
 	SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 	TTF_Font* robotoF = TTF_OpenFont("res/roboto.ttf", 72);
 	int w, h;
@@ -652,6 +753,7 @@ gameBegin:
 			++i;
 		}
 	}
+
 	{
 		int i = 0;
 		for (Circle& circle : objects.circles) {
@@ -662,6 +764,7 @@ gameBegin:
 			for (int j = 0; j < objects.lines.size(); ++j) {
 				SDL_FRect r = circleToRect(objects.circles[i]);
 				SDL_FRect r2 = lineToFRect(objects.lines[j]);
+
 				if (SDL_HasIntersection(&r, &r2)) {
 					circle.x = position.x;
 					circle.y = position.y;
@@ -726,7 +829,22 @@ gameBegin:
 			++i;
 		}
 	}
+	
 #endif
+	// TODO: Does it make sense to randomize position of circles when they are in file already?
+	for (Circle& circle : objects.circles) {
+		SDL_Point position = { random(circle.r, windowWidth - circle.r), random(circle.r, windowHeight - circle.r) };
+		circle.x = position.x;
+		circle.y = position.y;
+		// TOOO: They cannot collide with other objects
+
+	}
+	for (Circle& circle : objects.filledCircles) {
+		SDL_Point position = { random(circle.r, windowWidth - circle.r), random(circle.r, windowHeight - circle.r) };
+		circle.x = position.x;
+		circle.y = position.y;
+		// TOOO: They cannot collide with other objects
+	}
 #if 1 // INIT_MENU_STATE
 	int buttonSplit = 5;
 	Button onePlayerBtn;
@@ -905,7 +1023,7 @@ gameBegin:
 					firstPlayer.speed = PLAYER_SPEED_LIMIT;
 				}
 #if 1 // NOTE: Reflection from borders
-				if (secondPlayer.r.x < 0 || secondPlayer.r.x + secondPlayer.r.w > windowWidth) {
+				if (secondPlayer.r.x < 0 || secondPlayer.r.x + secondPlayer.r.w > windowWidth	) {
 					SDL_FPoint leftUpRotatedP = rotatePoint((float)secondPlayer.r.x + secondPlayer.r.w / 2, (float)secondPlayer.r.y + secondPlayer.r.y / 2, secondPlayer.angle, { secondPlayer.r.x, secondPlayer.r.y });
 					SDL_FPoint rightUpRotatedP = rotatePoint((float)secondPlayer.r.x + secondPlayer.r.w / 2, (float)secondPlayer.r.y + secondPlayer.r.y / 2, secondPlayer.angle, { secondPlayer.r.x + secondPlayer.r.w, secondPlayer.r.y });
 					SDL_FPoint rightDownRotatedP = rotatePoint((float)secondPlayer.r.x + secondPlayer.r.w / 2, (float)secondPlayer.r.y + secondPlayer.r.y / 2, secondPlayer.angle, { secondPlayer.r.x + secondPlayer.r.w, secondPlayer.r.y + secondPlayer.r.h });
@@ -996,6 +1114,7 @@ gameBegin:
 			}
 			for (Circle& circle : objects.circles) {
 				circle.move();
+
 			}
 			for (Circle& filledCircle : objects.filledCircles) {
 				filledCircle.move();
@@ -1006,8 +1125,13 @@ gameBegin:
 				for (Circle& circle : objects.circles) {
 					SDL_FRect circleR = circleToRect(circle);
 					int j = 0;
+					if (SDL_HasIntersection(&circleR, &firstPlayer.r)) {
+						circle.dx = -circle.dx;
+						circle.dy = -circle.dy;
+												
+					}
 					for (Entity& b : bullets) {
-						if (SDL_HasIntersection(&circleR, &b.r)) {
+							if (SDL_HasIntersection(&circleR, &b.r)) {
 							bullets.erase(bullets.begin() + j--);
 							if (--circle.energy <= 0) {
 								objects.circles.erase(objects.circles.begin() + i--);
@@ -1031,6 +1155,10 @@ gameBegin:
 					circleR.x = filledCircle.x - filledCircle.r;
 					circleR.y = filledCircle.y - filledCircle.r;
 					int j = 0;
+					if (SDL_HasIntersection(&circleR, &firstPlayer.r))	{
+						filledCircle.dx = -filledCircle.dx;
+						filledCircle.dy = -filledCircle.dy;
+					}
 					for (Entity& b : bullets) {
 						if (SDL_HasIntersection(&circleR, &b.r)) {
 							bullets.erase(bullets.begin() + j--);
@@ -1050,10 +1178,13 @@ gameBegin:
 			{
 				int i = 0;
 				for (Line& line : objects.lines) {
-					SDL_FRect lineR = lineToFRect(line);
 					int j = 0;
+					if (SDL_IntersectRectAndLine(&firstPlayer.r, &line.x1, &line.y1, &line.x2, &line.y2))	{
+						line.dx = -line.dx;
+						line.dy = -line.dy;
+					}
 					for (Entity& b : bullets) {
-						if (SDL_HasIntersection(&lineR, &b.r)) {
+						if (SDL_IntersectRectAndLine(&b.r, &line.x1, &line.y1, &line.x2, &line.y2)) {
 							bullets.erase(bullets.begin() + j--);
 							if (--line.energy <= 0) {
 								objects.lines.erase(objects.lines.begin() + i--);
@@ -1207,6 +1338,7 @@ gameBegin:
 			onePlayerBtn.draw(renderer);
 			twoPlayersBtn.draw(renderer);
 			SDL_RenderPresent(renderer);
+			
 		}
 	}
 	// TODO: On mobile remember to use eventWatch function (it doesn't reach this code when terminating)
