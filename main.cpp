@@ -32,7 +32,6 @@
 #include <android/log.h> //__android_log_print(ANDROID_LOG_VERBOSE, "ProgramPraktyki", "Example number log: %d", number);
 #include <jni.h>
 #endif
-#include <SDL2_gfxPrimitives.h>
 
 
 // NOTE: Remember to uncomment it on every release
@@ -47,15 +46,18 @@
 //360 x 640 (Galaxy S5)
 //640 x 480 (480i - Smallest PC monitor)
 
-int windowWidth = 240;
-int windowHeight = 320;
+#define WINDOW_WIDTH_INIT 240
+#define WINDOW_HEIGHT_INIT 320
+
+int windowWidth = WINDOW_WIDTH_INIT;
+int windowHeight = WINDOW_HEIGHT_INIT;
 SDL_Point mousePos;
 SDL_Point realMousePos;
 bool keys[SDL_NUM_SCANCODES];
 bool buttons[SDL_BUTTON_X2 + 1];
 
 #define PLAYER_ROTATION_SPEED 0.1
-#define PLAYER_SPEED 0.1
+#define PLAYER_SPEED 0.01
 #define PLAYER_SPEED_INCREASE 0.001
 #define PLAYER_SPEED_LIMIT 1
 #define PI 3.14159265358979323846
@@ -141,8 +143,7 @@ int eventWatch(void* userdata, SDL_Event* event)
 }
 
 
-int
-SDL_RenderDrawCircle(SDL_Renderer* renderer, int x, int y, int radius)
+int SDL_RenderDrawCircle(SDL_Renderer* renderer, int x, int y, int radius)
 {
 	int offsetx, offsety, d;
 	int status;
@@ -187,8 +188,7 @@ SDL_RenderDrawCircle(SDL_Renderer* renderer, int x, int y, int radius)
 }
 
 
-int
-SDL_RenderFillCircle(SDL_Renderer* renderer, int x, int y, int radius)
+int SDL_RenderFillCircle(SDL_Renderer* renderer, int x, int y, int radius)
 {
 	int offsetx, offsety, d;
 	int status;
@@ -231,66 +231,6 @@ SDL_RenderFillCircle(SDL_Renderer* renderer, int x, int y, int radius)
 	}
 
 	return status;
-}
-
-float speedX = 5;
-float speedY = 3;
-int x = 50;
-int y = 50;
-
-int radius = 10;
-
-
-Uint32 my_callbackfunc(Uint32 interval, void* param)
-{
-#if 0
-	SDL_Event event;
-	SDL_UserEvent userevent;
-
-	/* In this example, our callback pushes an SDL_USEREVENT event
-	into the queue, and causes our callback to be called again at the
-	same interval: */
-
-	userevent.type = SDL_USEREVENT;
-	userevent.code = 0;
-	userevent.data1 = NULL;
-	userevent.data2 = NULL;
-
-	event.type = SDL_USEREVENT;
-	event.user = userevent;
-
-	SDL_PushEvent(&event);
-#endif
-	//	std::cout << "Hello World!" << std::endl;
-	x += speedX;
-	y += speedY;
-	if (x + radius / 2 > windowWidth || x - radius / 2 < 0) {
-		speedX = -speedX;
-	}
-	if (y + radius / 2 > windowHeight || y - radius / 2 < 0) {
-		speedY = -speedY;
-	}
-
-	return(interval);
-}
-
-float getAngle(int x1, int y1, int x2, int y2)
-{
-	float angle = -90 + atan2(y1 - y2, x1 - x2) * (180 / PI);
-	return angle >= 0 ? angle : 360 + angle;
-}
-
-void calcSlope(int x1, int y1, int x2, int y2, float* dx, float* dy)
-{
-	int steps = std::max(abs(x1 - x2), abs(y1 - y2));
-	if (steps == 0) {
-		*dx = *dy = 0;
-		return;
-	}
-	*dx = (x1 - x2);
-	*dx /= steps;
-	*dy = (y1 - y2);
-	*dy /= steps;
 }
 
 std::string readWholeFile(std::string path)
@@ -545,6 +485,33 @@ SDL_FRect circleToRect(Circle circle)
 	return circleR;
 }
 
+void setDisplayMode(bool on)
+{
+	if (on) {
+		SDL_DisplayMode dm;
+		SDL_GetCurrentDisplayMode(0, &dm);
+		windowWidth = dm.w;
+		windowHeight = dm.h;
+	}
+	else {
+		windowWidth = WINDOW_WIDTH_INIT;
+		windowHeight = WINDOW_HEIGHT_INIT;
+	}
+}
+
+State state = State::Menu;
+
+void setState(State& state, State dstState)
+{
+	state = dstState;
+	if (state == State::Game) {
+		setDisplayMode(true);
+	}
+	else if (state == State::Menu) {
+		setDisplayMode(false);
+	}
+}
+
 int main(int argc, char* argv[])
 {
 	std::srand(std::time(0));
@@ -553,7 +520,7 @@ int main(int argc, char* argv[])
 	SDL_Init(SDL_INIT_EVERYTHING);
 	TTF_Init();
 	SDL_GetMouseState(&mousePos.x, &mousePos.y);
-#if 1 // TODO: Remember to turn it off on reelase
+#if 0 // TODO: Remember to turn it off on reelase
 	SDL_Window * window = SDL_CreateWindow("ProgramPraktyki", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, windowWidth, windowHeight, SDL_WINDOW_RESIZABLE);
 #else
 	SDL_Window* window = SDL_CreateWindow("ProgramPraktyki", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, windowWidth, windowHeight, SDL_WINDOW_RESIZABLE | SDL_WINDOW_FULLSCREEN_DESKTOP);
@@ -569,7 +536,6 @@ int main(int argc, char* argv[])
 	SDL_RenderSetScale(renderer, w / (float)windowWidth, h / (float)windowHeight);
 	SDL_AddEventWatch(eventWatch, 0);
 	bool running = true;
-	SDL_AddTimer(20, my_callbackfunc, 0);
 
 gameBegin:
 	SDL_Texture* bulletT = IMG_LoadTexture(renderer, "res/bullet.png");
@@ -609,21 +575,24 @@ gameBegin:
 	{
 		int i = 0;
 		for (Line& line : objects.lines) {
-			int length = std::abs(line.x2 - line.x1);
-			SDL_Point position = { random(0, windowWidth - length), random(0, windowHeight - length) };
-			line.x1 = position.x;
-			line.y1 = position.y;
-			line.x2 = position.x;
-			line.y2 = position.y;
+			int minX = std::min(line.x1, line.x2);
+			int maxX = std::max(line.x1, line.x2);
+			int minY = std::min(line.y1, line.y2);
+			int maxY = std::max(line.y1, line.y2);
+			SDL_Point position = { random(-minX, windowWidth - maxX), random(-minY, windowHeight - maxY) };
+			line.x1 += position.x;
+			line.y1 += position.y;
+			line.x2 += position.x;
+			line.y2 += position.y;
 		collisionCheckBegin:
 			for (int j = 0; j < i; ++j) {
 				SDL_FRect r = lineToFRect(objects.lines[i]);
 				SDL_FRect r2 = lineToFRect(objects.lines[j]);
 				if (SDL_HasIntersection(&r, &r2)) {
-					line.x1 = position.x;
-					line.y1 = position.y;
-					line.x2 = position.x;
-					line.y2 = position.y;
+					line.x1 += position.x;
+					line.y1 += position.y;
+					line.x2 += position.x;
+					line.y2 += position.y;
 					goto collisionCheckBegin;
 				}
 			}
@@ -631,10 +600,10 @@ gameBegin:
 				SDL_FRect r = lineToFRect(objects.lines[i]);
 				SDL_FRect r2 = circleToRect(objects.circles[j]);
 				if (SDL_HasIntersection(&r, &r2)) {
-					line.x1 = position.x;
-					line.y1 = position.y;
-					line.x2 = position.x;
-					line.y2 = position.y;
+					line.x1 += position.x;
+					line.y1 += position.y;
+					line.x2 += position.x;
+					line.y2 += position.y;
 					goto collisionCheckBegin;
 				}
 			}
@@ -642,10 +611,10 @@ gameBegin:
 				SDL_FRect r = lineToFRect(objects.lines[i]);
 				SDL_FRect r2 = circleToRect(objects.filledCircles[j]);
 				if (SDL_HasIntersection(&r, &r2)) {
-					line.x1 = position.x;
-					line.y1 = position.y;
-					line.x2 = position.x;
-					line.y2 = position.y;
+					line.x1 += position.x;
+					line.y1 += position.y;
+					line.x2 += position.x;
+					line.y2 += position.y;
 					goto collisionCheckBegin;
 				}
 			}
@@ -696,7 +665,7 @@ gameBegin:
 			filledCircle.x = position.x;
 			filledCircle.y = position.y;
 		collisionCheckBegin3:
-			for (int j = 0; j < i; ++j) {
+			for (int j = 0; j < objects.lines.size(); ++j) {
 				SDL_FRect r = circleToRect(objects.filledCircles[i]);
 				SDL_FRect r2 = lineToFRect(objects.lines[j]);
 				if (SDL_HasIntersection(&r, &r2)) {
@@ -757,8 +726,6 @@ gameBegin:
 	int playerCount = 1;
 #endif
 
-	State state = State::Menu;
-
 	while (running) {
 		if (state == State::Game) {
 			SDL_Event event;
@@ -797,6 +764,7 @@ gameBegin:
 					realMousePos.y = event.motion.y;
 				}
 			}
+#if 1 // NOTE: Player 1 code
 			if (keys[SDL_SCANCODE_A]) {
 				if (firstPlayer.angle < 0) {
 					firstPlayer.angle = 360.0;
@@ -821,50 +789,78 @@ gameBegin:
 					firstPlayer.speed = PLAYER_SPEED_LIMIT;
 				}
 #if 1 // NOTE: Reflection from borders
-				if (firstPlayer.r.x < 0 || firstPlayer.r.x + firstPlayer.r.w > windowWidth) {
-					SDL_FPoint leftUpRotatedP = rotatePoint((float)firstPlayer.r.x + firstPlayer.r.w / 2, (float)firstPlayer.r.y + firstPlayer.r.y / 2, firstPlayer.angle, { firstPlayer.r.x, firstPlayer.r.y });
-					SDL_FPoint rightUpRotatedP = rotatePoint((float)firstPlayer.r.x + firstPlayer.r.w / 2, (float)firstPlayer.r.y + firstPlayer.r.y / 2, firstPlayer.angle, { firstPlayer.r.x + firstPlayer.r.w, firstPlayer.r.y });
-					SDL_FPoint rightDownRotatedP = rotatePoint((float)firstPlayer.r.x + firstPlayer.r.w / 2, (float)firstPlayer.r.y + firstPlayer.r.y / 2, firstPlayer.angle, { firstPlayer.r.x + firstPlayer.r.w, firstPlayer.r.y + firstPlayer.r.h });
-					SDL_FPoint leftDownRotatedP = rotatePoint((float)firstPlayer.r.x + firstPlayer.r.w / 2, (float)firstPlayer.r.y + firstPlayer.r.y / 2, firstPlayer.angle, { firstPlayer.r.x, firstPlayer.r.y + firstPlayer.r.h });
+				float cx = firstPlayer.r.x + firstPlayer.r.w / 2;
+				float cy = firstPlayer.r.y + firstPlayer.r.h / 2;
+				SDL_FPoint leftUpRotatedP = rotatePoint(cx, cy, firstPlayer.angle, { firstPlayer.r.x, firstPlayer.r.y });
+				SDL_FPoint rightUpRotatedP = rotatePoint(cx, cy, firstPlayer.angle, { firstPlayer.r.x + firstPlayer.r.w, firstPlayer.r.y });
+				SDL_FPoint rightDownRotatedP = rotatePoint(cx, cy, firstPlayer.angle, { firstPlayer.r.x + firstPlayer.r.w, firstPlayer.r.y + firstPlayer.r.h });
+				SDL_FPoint leftDownRotatedP = rotatePoint(cx, cy, firstPlayer.angle, { firstPlayer.r.x, firstPlayer.r.y + firstPlayer.r.h });
+				if (leftUpRotatedP.x < 0 || rightUpRotatedP.x < 0 || rightDownRotatedP.x < 0 || leftDownRotatedP.x < 0
+					|| leftUpRotatedP.y < 0 || rightUpRotatedP.y < 0 || rightDownRotatedP.y < 0 || leftDownRotatedP.y < 0
+					|| leftUpRotatedP.x > windowWidth || rightUpRotatedP.x > windowWidth || rightDownRotatedP.x > windowWidth || leftDownRotatedP.x > windowWidth
+					|| leftUpRotatedP.y > windowHeight || rightUpRotatedP.y > windowHeight || rightDownRotatedP.y > windowHeight || leftDownRotatedP.y > windowHeight) {
 					firstPlayer.speed = -firstPlayer.speed;
-					float highestX = std::max(leftUpRotatedP.x, rightUpRotatedP.x);
 					{
-						highestX = std::max(highestX, rightDownRotatedP.x);
-						highestX = std::max(highestX, leftDownRotatedP.x);
+						float highestX = leftUpRotatedP.x;
+						if (rightUpRotatedP.x > highestX) {
+							highestX = rightUpRotatedP.x;
+						}
+						if (rightDownRotatedP.x > highestX) {
+							highestX = rightDownRotatedP.x;
+						}
+						if (leftDownRotatedP.x > highestX) {
+							highestX = leftDownRotatedP.x;
+						}
 						if (highestX > windowWidth) {
-							firstPlayer.speed = -firstPlayer.speed;
-							firstPlayer.r.x = windowWidth - firstPlayer.r.w * 2;
+							firstPlayer.r.x -= firstPlayer.r.w * 3;
 						}
 					}
-					float highestY = std::max(leftUpRotatedP.y, rightUpRotatedP.y);
 					{
-						highestY = std::max(highestY, leftDownRotatedP.y);
-						highestY = std::max(highestY, rightDownRotatedP.y);
+						float highestY = leftUpRotatedP.y;
+						if (rightUpRotatedP.y > highestY) {
+							highestY = rightUpRotatedP.y;
+						}
+						if (rightDownRotatedP.y > highestY) {
+							highestY = rightDownRotatedP.y;
+						}
+						if (leftDownRotatedP.y > highestY) {
+							highestY = leftDownRotatedP.y;
+						}
 						if (highestY > windowHeight) {
-							firstPlayer.speed = -firstPlayer.speed;
-							firstPlayer.r.y = windowHeight - firstPlayer.r.h * 2;
+							firstPlayer.r.y -= firstPlayer.r.h * 3;
 						}
 					}
-					float lowestX = std::min(leftUpRotatedP.x, rightUpRotatedP.x);
 					{
-						lowestX = std::min(lowestX, rightDownRotatedP.x);
-						lowestX = std::min(lowestX, leftDownRotatedP.x);
+						float lowestX = leftUpRotatedP.x;
+						if (rightUpRotatedP.x < lowestX) {
+							lowestX = rightUpRotatedP.x;
+						}
+						if (rightDownRotatedP.x < lowestX) {
+							lowestX = rightDownRotatedP.x;
+						}
+						if (leftDownRotatedP.x < lowestX) {
+							lowestX = leftDownRotatedP.x;
+						}
 						if (lowestX < 0) {
-							firstPlayer.speed = -firstPlayer.speed;
-							firstPlayer.r.x = firstPlayer.r.w * 2;
+							firstPlayer.r.x += firstPlayer.r.w * 3;
 						}
 					}
-					float lowestY = std::min(leftUpRotatedP.y, rightUpRotatedP.y);
 					{
-						lowestY = std::min(lowestY, rightDownRotatedP.y);
-						lowestY = std::min(lowestY, leftDownRotatedP.y);
+						float lowestY = leftUpRotatedP.y;
+						if (rightUpRotatedP.y < lowestY) {
+							lowestY = rightUpRotatedP.y;
+						}
+						if (rightDownRotatedP.y < lowestY) {
+							lowestY = rightDownRotatedP.y;
+						}
+						if (leftDownRotatedP.y < lowestY) {
+							lowestY = leftDownRotatedP.y;
+						}
 						if (lowestY < 0) {
-							firstPlayer.speed = -firstPlayer.speed;
-							firstPlayer.r.y = firstPlayer.r.h * 2;
+							firstPlayer.r.y += firstPlayer.r.h * 3;
 						}
 					}
 				}
-#endif
 			}
 			if (firstPlayerSlowDownOnAccelerationKeyRelease) {
 				firstPlayer.r.x -= std::sin(firstPlayer.angle * (M_PI / 180)) * firstPlayer.speed;
@@ -880,75 +876,105 @@ gameBegin:
 				bullets.back() = firstPlayer;
 				bullets.back().t = bulletT;
 			}
+#endif
+#endif
 #if 1 // NOTE: Player 2 code: should be same as player 1 but with other movement
 			if (keys[SDL_SCANCODE_LEFT]) {
-				if (firstPlayer.angle < 0) {
-					firstPlayer.angle = 360.0;
+				if (secondPlayer.angle < 0) {
+					secondPlayer.angle = 360.0;
 				}
 				else {
-					firstPlayer.angle -= PLAYER_ROTATION_SPEED;
+					secondPlayer.angle -= PLAYER_ROTATION_SPEED;
 				}
 			}
 			if (keys[SDL_SCANCODE_RIGHT]) {
-				if (firstPlayer.angle > 360) {
-					firstPlayer.angle = 0.0;
+				if (secondPlayer.angle > 360) {
+					secondPlayer.angle = 0.0;
 				}
 				else {
-					firstPlayer.angle += PLAYER_ROTATION_SPEED;
+					secondPlayer.angle += PLAYER_ROTATION_SPEED;
 				}
 			}
 			if (keys[SDL_SCANCODE_UP]) {
-				firstPlayer.r.x -= std::sin(firstPlayer.angle * (M_PI / 180)) * firstPlayer.speed;
-				firstPlayer.r.y += std::cos(firstPlayer.angle * (M_PI / 180)) * firstPlayer.speed;
-				firstPlayer.speed += PLAYER_SPEED_INCREASE;
-				if (firstPlayer.speed > PLAYER_SPEED_LIMIT) {
-					firstPlayer.speed = PLAYER_SPEED_LIMIT;
+				secondPlayer.r.x -= std::sin(secondPlayer.angle * (M_PI / 180)) * secondPlayer.speed;
+				secondPlayer.r.y += std::cos(secondPlayer.angle * (M_PI / 180)) * secondPlayer.speed;
+				secondPlayer.speed += PLAYER_SPEED_INCREASE;
+				if (secondPlayer.speed > PLAYER_SPEED_LIMIT) {
+					secondPlayer.speed = PLAYER_SPEED_LIMIT;
 				}
 #if 1 // NOTE: Reflection from borders
-				if (secondPlayer.r.x < 0 || secondPlayer.r.x + secondPlayer.r.w > windowWidth) {
-					SDL_FPoint leftUpRotatedP = rotatePoint((float)secondPlayer.r.x + secondPlayer.r.w / 2, (float)secondPlayer.r.y + secondPlayer.r.y / 2, secondPlayer.angle, { secondPlayer.r.x, secondPlayer.r.y });
-					SDL_FPoint rightUpRotatedP = rotatePoint((float)secondPlayer.r.x + secondPlayer.r.w / 2, (float)secondPlayer.r.y + secondPlayer.r.y / 2, secondPlayer.angle, { secondPlayer.r.x + secondPlayer.r.w, secondPlayer.r.y });
-					SDL_FPoint rightDownRotatedP = rotatePoint((float)secondPlayer.r.x + secondPlayer.r.w / 2, (float)secondPlayer.r.y + secondPlayer.r.y / 2, secondPlayer.angle, { secondPlayer.r.x + secondPlayer.r.w, secondPlayer.r.y + secondPlayer.r.h });
-					SDL_FPoint leftDownRotatedP = rotatePoint((float)secondPlayer.r.x + secondPlayer.r.w / 2, (float)secondPlayer.r.y + secondPlayer.r.y / 2, secondPlayer.angle, { secondPlayer.r.x, secondPlayer.r.y + secondPlayer.r.h });
+				float cx = secondPlayer.r.x + secondPlayer.r.w / 2;
+				float cy = secondPlayer.r.y + secondPlayer.r.h / 2;
+				SDL_FPoint leftUpRotatedP = rotatePoint(cx, cy, secondPlayer.angle, { secondPlayer.r.x, secondPlayer.r.y });
+				SDL_FPoint rightUpRotatedP = rotatePoint(cx, cy, secondPlayer.angle, { secondPlayer.r.x + secondPlayer.r.w, secondPlayer.r.y });
+				SDL_FPoint rightDownRotatedP = rotatePoint(cx, cy, secondPlayer.angle, { secondPlayer.r.x + secondPlayer.r.w, secondPlayer.r.y + secondPlayer.r.h });
+				SDL_FPoint leftDownRotatedP = rotatePoint(cx, cy, secondPlayer.angle, { secondPlayer.r.x, secondPlayer.r.y + secondPlayer.r.h });
+				if (leftUpRotatedP.x < 0 || rightUpRotatedP.x < 0 || rightDownRotatedP.x < 0 || leftDownRotatedP.x < 0
+					|| leftUpRotatedP.y < 0 || rightUpRotatedP.y < 0 || rightDownRotatedP.y < 0 || leftDownRotatedP.y < 0
+					|| leftUpRotatedP.x > windowWidth || rightUpRotatedP.x > windowWidth || rightDownRotatedP.x > windowWidth || leftDownRotatedP.x > windowWidth
+					|| leftUpRotatedP.y > windowHeight || rightUpRotatedP.y > windowHeight || rightDownRotatedP.y > windowHeight || leftDownRotatedP.y > windowHeight) {
 					secondPlayer.speed = -secondPlayer.speed;
-					float highestX = std::max(leftUpRotatedP.x, rightUpRotatedP.x);
 					{
-						highestX = std::max(highestX, rightDownRotatedP.x);
-						highestX = std::max(highestX, leftDownRotatedP.x);
+						float highestX = leftUpRotatedP.x;
+						if (rightUpRotatedP.x > highestX) {
+							highestX = rightUpRotatedP.x;
+						}
+						if (rightDownRotatedP.x > highestX) {
+							highestX = rightDownRotatedP.x;
+						}
+						if (leftDownRotatedP.x > highestX) {
+							highestX = leftDownRotatedP.x;
+						}
 						if (highestX > windowWidth) {
-							secondPlayer.speed = -secondPlayer.speed;
-							secondPlayer.r.x = windowWidth - secondPlayer.r.w * 2;
+							secondPlayer.r.x -= secondPlayer.r.w * 3;
 						}
 					}
-					float highestY = std::max(leftUpRotatedP.y, rightUpRotatedP.y);
 					{
-						highestY = std::max(highestY, leftDownRotatedP.y);
-						highestY = std::max(highestY, rightDownRotatedP.y);
+						float highestY = leftUpRotatedP.y;
+						if (rightUpRotatedP.y > highestY) {
+							highestY = rightUpRotatedP.y;
+						}
+						if (rightDownRotatedP.y > highestY) {
+							highestY = rightDownRotatedP.y;
+						}
+						if (leftDownRotatedP.y > highestY) {
+							highestY = leftDownRotatedP.y;
+						}
 						if (highestY > windowHeight) {
-							secondPlayer.speed = -secondPlayer.speed;
-							secondPlayer.r.y = windowHeight - secondPlayer.r.h * 2;
+							secondPlayer.r.y -= secondPlayer.r.h * 3;
 						}
 					}
-					float lowestX = std::min(leftUpRotatedP.x, rightUpRotatedP.x);
 					{
-						lowestX = std::min(lowestX, rightDownRotatedP.x);
-						lowestX = std::min(lowestX, leftDownRotatedP.x);
+						float lowestX = leftUpRotatedP.x;
+						if (rightUpRotatedP.x < lowestX) {
+							lowestX = rightUpRotatedP.x;
+						}
+						if (rightDownRotatedP.x < lowestX) {
+							lowestX = rightDownRotatedP.x;
+						}
+						if (leftDownRotatedP.x < lowestX) {
+							lowestX = leftDownRotatedP.x;
+						}
 						if (lowestX < 0) {
-							secondPlayer.speed = -secondPlayer.speed;
-							secondPlayer.r.x = secondPlayer.r.w * 2;
+							secondPlayer.r.x += secondPlayer.r.w * 3;
 						}
 					}
-					float lowestY = std::min(leftUpRotatedP.y, rightUpRotatedP.y);
 					{
-						lowestY = std::min(lowestY, rightDownRotatedP.y);
-						lowestY = std::min(lowestY, leftDownRotatedP.y);
+						float lowestY = leftUpRotatedP.y;
+						if (rightUpRotatedP.y < lowestY) {
+							lowestY = rightUpRotatedP.y;
+						}
+						if (rightDownRotatedP.y < lowestY) {
+							lowestY = rightDownRotatedP.y;
+						}
+						if (leftDownRotatedP.y < lowestY) {
+							lowestY = leftDownRotatedP.y;
+						}
 						if (lowestY < 0) {
-							secondPlayer.speed = -secondPlayer.speed;
-							secondPlayer.r.y = secondPlayer.r.h * 2;
+							secondPlayer.r.y += secondPlayer.r.h * 3;
 						}
 					}
 				}
-#endif
 			}
 			if (secondPlayerSlowDownOnAccelerationKeyRelease) {
 				secondPlayer.r.x -= std::sin(secondPlayer.angle * (M_PI / 180)) * secondPlayer.speed;
@@ -964,6 +990,7 @@ gameBegin:
 				bullets.back() = secondPlayer;
 				bullets.back().t = bulletT;
 			}
+#endif
 #endif
 			for (Entity& b : bullets) {
 				b.r.x -= std::sin(b.angle * (M_PI / 180)) * b.speed;
@@ -1003,6 +1030,27 @@ gameBegin:
 #if 1 // NOTE: Bullet - element collision
 			{
 				int i = 0;
+				for (Line& line : objects.lines) {
+					SDL_FRect lineR = lineToFRect(line);
+					int j = 0;
+					for (Entity& b : bullets) {
+						if (SDL_HasIntersection(&lineR, &b.r)) {
+							bullets.erase(bullets.begin() + j--);
+							if (--line.energy <= 0) {
+								objects.lines.erase(objects.lines.begin() + i--);
+								int points = std::stoi(pointsTxt.text);
+								++points;
+								pointsTxt.setText(renderer, robotoF, std::to_string(points));
+								break;
+							}
+						}
+						++j;
+					}
+					++i;
+				}
+			}
+			{
+				int i = 0;
 				for (Circle& circle : objects.circles) {
 					SDL_FRect circleR = circleToRect(circle);
 					int j = 0;
@@ -1036,27 +1084,6 @@ gameBegin:
 							bullets.erase(bullets.begin() + j--);
 							if (--filledCircle.energy <= 0) {
 								objects.filledCircles.erase(objects.filledCircles.begin() + i--);
-								int points = std::stoi(pointsTxt.text);
-								++points;
-								pointsTxt.setText(renderer, robotoF, std::to_string(points));
-								break;
-							}
-						}
-						++j;
-					}
-					++i;
-				}
-			}
-			{
-				int i = 0;
-				for (Line& line : objects.lines) {
-					SDL_FRect lineR = lineToFRect(line);
-					int j = 0;
-					for (Entity& b : bullets) {
-						if (SDL_HasIntersection(&lineR, &b.r)) {
-							bullets.erase(bullets.begin() + j--);
-							if (--line.energy <= 0) {
-								objects.lines.erase(objects.lines.begin() + i--);
 								int points = std::stoi(pointsTxt.text);
 								++points;
 								pointsTxt.setText(renderer, robotoF, std::to_string(points));
@@ -1182,11 +1209,11 @@ gameBegin:
 					buttons[event.button.button] = true;
 					if (SDL_PointInRect(&mousePos, &onePlayerBtn.r)) {
 						playerCount = 1;
-						state = State::Game;
+						setState(state, State::Game);
 					}
 					else if (SDL_PointInRect(&mousePos, &twoPlayersBtn.r)) {
 						playerCount = 2;
-						state = State::Game;
+						setState(state, State::Game);
 					}
 				}
 				if (event.type == SDL_MOUSEBUTTONUP) {
