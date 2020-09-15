@@ -61,7 +61,7 @@ bool buttons[SDL_BUTTON_X2 + 1];
 #define PLAYER_SPEED_INCREASE 0.001
 #define PLAYER_SPEED_LIMIT 1
 #define BULLET_SPEED 1
-#define PLAYER_SHOOT_LATENCY_IN_MS 200
+#define PLAYER_SHOOT_LATENCY_IN_MS 125
 #define PI 3.14159265358979323846
 
 void logOutputCallback(void* userdata, int category, SDL_LogPriority priority, const char* message)
