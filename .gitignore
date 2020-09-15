@@ -1,3 +1,5 @@
 .vs
 *.vcxproj.*
-bin
+bin/obj
+*.pdb
+*.ilk
