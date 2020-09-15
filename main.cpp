@@ -610,67 +610,8 @@ void setState(State& state, State dstState)
 	}
 }
 
-int main(int argc, char* argv[])
+void randomizePositionIfThereIsCollision(Objects& objects)
 {
-	std::srand(std::time(0));
-	SDL_LogSetAllPriority(SDL_LOG_PRIORITY_VERBOSE);
-	SDL_LogSetOutputFunction(logOutputCallback, 0);
-	SDL_Init(SDL_INIT_EVERYTHING);
-	TTF_Init();
-	SDL_GetMouseState(&mousePos.x, &mousePos.y);
-#if 0 // TODO: Remember to turn it off on reelase
-	SDL_Window * window = SDL_CreateWindow("ProgramPraktyki", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, windowWidth, windowHeight, SDL_WINDOW_RESIZABLE);
-#else
-	SDL_Window* window = SDL_CreateWindow("ProgramPraktyki", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, windowWidth, windowHeight, SDL_WINDOW_RESIZABLE | SDL_WINDOW_FULLSCREEN_DESKTOP);
-	SDL_DisplayMode dm;
-	SDL_GetCurrentDisplayMode(0, &dm);
-	windowWidth = dm.w;
-	windowHeight = dm.h;
-#endif
-	SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-	TTF_Font* robotoF = TTF_OpenFont("res/roboto.ttf", 72);
-	int w, h;
-	SDL_GetWindowSize(window, &w, &h);
-	SDL_RenderSetScale(renderer, w / (float)windowWidth, h / (float)windowHeight);
-	SDL_AddEventWatch(eventWatch, 0);
-	bool running = true;
-
-	int playerCount = 1;
-gameBegin:
-	SDL_Texture* bulletT = IMG_LoadTexture(renderer, "res/bullet.png");
-	Entity firstPlayer;
-	firstPlayer.r.w = 32;
-	firstPlayer.r.h = 32;
-	firstPlayer.r.x = 0;
-	firstPlayer.r.y = 0;
-	firstPlayer.t = IMG_LoadTexture(renderer, "res/player1.png");
-	firstPlayer.speed = PLAYER_SPEED;
-	bool firstPlayerSlowDownOnAccelerationKeyRelease = false;
-	Entity secondPlayer;
-	secondPlayer.r.w = 32;
-	secondPlayer.r.h = 32;
-	secondPlayer.r.x = windowWidth - secondPlayer.r.w;
-	secondPlayer.r.y = 0;
-	secondPlayer.t = IMG_LoadTexture(renderer, "res/player2.png");
-	secondPlayer.speed = PLAYER_SPEED;
-	bool secondPlayerSlowDownOnAccelerationKeyRelease = false;
-	std::vector<Entity> bullets;
-
-	Text pointsTxt;
-	pointsTxt.setText(renderer, robotoF, "0");
-	pointsTxt.adjustSize(0.3, 0.3);
-	pointsTxt.dstR.x = windowWidth / 2 - pointsTxt.dstR.w / 2;
-	pointsTxt.dstR.y = 5;
-
-	/*
-	l-line
-	c-circle
-	k-filled circle
-	p-change color
-	*/
-	std::string movingFile = readWholeFile("res/ruchome.txt");
-	Objects objects = readObjects(movingFile);
-#if 1 // NOTE: If there is collision randomize position one more time
 	{
 		int i = 0;
 		for (Line& line : objects.lines) {
@@ -794,7 +735,233 @@ gameBegin:
 			++i;
 		}
 	}
+}
+
+void checkBulletsElementsCollision(Objects& objects, std::vector<Entity>& bullets, Entity& firstPlayer, Entity& secondPlayer, Text& pointsTxt, SDL_Renderer* renderer, TTF_Font* robotoF)
+{
+	{
+		int i = 0;
+		for (Circle& circle : objects.circles) {
+			SDL_FRect circleR = circleToRect(circle);
+			int j = 0;
+			if (SDL_HasIntersection(&circleR, &firstPlayer.r)) {
+				circle.dx = -circle.dx;
+				circle.dy = -circle.dy;
+
+			}
+			for (Entity& b : bullets) {
+				if (SDL_HasIntersection(&circleR, &b.r)) {
+					bullets.erase(bullets.begin() + j--);
+					if (--circle.energy <= 0) {
+						objects.circles.erase(objects.circles.begin() + i--);
+						int points = std::stoi(pointsTxt.text);
+						++points;
+						pointsTxt.setText(renderer, robotoF, std::to_string(points));
+						break;
+					}
+				}
+				++j;
+			}
+			++i;
+		}
+	}
+	{
+		int i = 0;
+		for (Circle& filledCircle : objects.filledCircles) {
+			SDL_FRect circleR;
+			circleR.w = filledCircle.r * 2;
+			circleR.h = filledCircle.r * 2;
+			circleR.x = filledCircle.x - filledCircle.r;
+			circleR.y = filledCircle.y - filledCircle.r;
+			int j = 0;
+			if (SDL_HasIntersection(&circleR, &firstPlayer.r)) {
+				filledCircle.dx = -filledCircle.dx;
+				filledCircle.dy = -filledCircle.dy;
+			}
+			for (Entity& b : bullets) {
+				if (SDL_HasIntersection(&circleR, &b.r)) {
+					bullets.erase(bullets.begin() + j--);
+					if (--filledCircle.energy <= 0) {
+						objects.filledCircles.erase(objects.filledCircles.begin() + i--);
+						int points = std::stoi(pointsTxt.text);
+						++points;
+						pointsTxt.setText(renderer, robotoF, std::to_string(points));
+						break;
+					}
+				}
+				++j;
+			}
+			++i;
+		}
+	}
+	{
+		int i = 0;
+		for (Line& line : objects.lines) {
+			int j = 0;
+			if (SDL_IntersectRectAndLine(&firstPlayer.r, &line.x1, &line.y1, &line.x2, &line.y2)) {
+				line.dx = -line.dx;
+				line.dy = -line.dy;
+			}
+			for (Entity& b : bullets) {
+				if (SDL_IntersectRectAndLine(&b.r, &line.x1, &line.y1, &line.x2, &line.y2)) {
+					bullets.erase(bullets.begin() + j--);
+					if (--line.energy <= 0) {
+						objects.lines.erase(objects.lines.begin() + i--);
+						int points = std::stoi(pointsTxt.text);
+						++points;
+						pointsTxt.setText(renderer, robotoF, std::to_string(points));
+						break;
+					}
+				}
+				++j;
+			}
+			++i;
+		}
+	}
+}
+
+void checkPlayersElementsCollision(Objects& objects, std::vector<Entity>& bullets, Entity& firstPlayer, Entity& secondPlayer, Text& pointsTxt, SDL_Renderer* renderer, TTF_Font* robotoF)
+{
+	{
+		int i = 0;
+		for (Line& line : objects.lines) {
+			SDL_FRect lineR = lineToFRect(line);
+			if (SDL_HasIntersection(&firstPlayer.r, &lineR)) {
+				if (--line.energy <= 0) {
+					objects.lines.erase(objects.lines.begin() + i--);
+					int points = std::stoi(pointsTxt.text);
+					++points;
+					pointsTxt.setText(renderer, robotoF, std::to_string(points));
+					break;
+				}
+			}
+			if (SDL_HasIntersection(&secondPlayer.r, &lineR)) {
+				if (--line.energy <= 0) {
+					objects.lines.erase(objects.lines.begin() + i--);
+					int points = std::stoi(pointsTxt.text);
+					++points;
+					pointsTxt.setText(renderer, robotoF, std::to_string(points));
+					break;
+				}
+			}
+		}
+	}
+	{
+		int i = 0;
+		for (Circle& circle : objects.circles) {
+			SDL_FRect circleR = circleToRect(circle);
+			if (SDL_HasIntersection(&circleR, &firstPlayer.r)) {
+				if (--circle.energy <= 0) {
+					objects.circles.erase(objects.circles.begin() + i--);
+					int points = std::stoi(pointsTxt.text);
+					++points;
+					pointsTxt.setText(renderer, robotoF, std::to_string(points));
+					break;
+				}
+			}
+			if (SDL_HasIntersection(&circleR, &secondPlayer.r)) {
+				if (--circle.energy <= 0) {
+					objects.circles.erase(objects.circles.begin() + i--);
+					int points = std::stoi(pointsTxt.text);
+					++points;
+					pointsTxt.setText(renderer, robotoF, std::to_string(points));
+					break;
+				}
+			}
+			++i;
+		}
+	}
+	{
+		int i = 0;
+		for (Circle& filledCircle : objects.filledCircles) {
+			SDL_FRect circleR = circleToRect(filledCircle);
+			if (SDL_HasIntersection(&circleR, &firstPlayer.r)) {
+				if (--filledCircle.energy <= 0) {
+					objects.filledCircles.erase(objects.filledCircles.begin() + i--);
+					int points = std::stoi(pointsTxt.text);
+					++points;
+					pointsTxt.setText(renderer, robotoF, std::to_string(points));
+					break;
+				}
+			}
+			if (SDL_HasIntersection(&circleR, &secondPlayer.r)) {
+				if (--filledCircle.energy <= 0) {
+					objects.filledCircles.erase(objects.filledCircles.begin() + i--);
+					int points = std::stoi(pointsTxt.text);
+					++points;
+					pointsTxt.setText(renderer, robotoF, std::to_string(points));
+					break;
+				}
+			}
+			++i;
+		}
+	}
+}
+
+int main(int argc, char* argv[])
+{
+	std::srand(std::time(0));
+	SDL_LogSetAllPriority(SDL_LOG_PRIORITY_VERBOSE);
+	SDL_LogSetOutputFunction(logOutputCallback, 0);
+	SDL_Init(SDL_INIT_EVERYTHING);
+	TTF_Init();
+	SDL_GetMouseState(&mousePos.x, &mousePos.y);
+#if 0 // TODO: Remember to turn it off on reelase
+	SDL_Window * window = SDL_CreateWindow("ProgramPraktyki", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, windowWidth, windowHeight, SDL_WINDOW_RESIZABLE);
+#else
+	SDL_Window* window = SDL_CreateWindow("ProgramPraktyki", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, windowWidth, windowHeight, SDL_WINDOW_RESIZABLE | SDL_WINDOW_FULLSCREEN_DESKTOP);
+	SDL_DisplayMode dm;
+	SDL_GetCurrentDisplayMode(0, &dm);
+	windowWidth = dm.w;
+	windowHeight = dm.h;
 #endif
+	SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+	TTF_Font* robotoF = TTF_OpenFont("res/roboto.ttf", 72);
+	int w, h;
+	SDL_GetWindowSize(window, &w, &h);
+	SDL_RenderSetScale(renderer, w / (float)windowWidth, h / (float)windowHeight);
+	SDL_AddEventWatch(eventWatch, 0);
+	bool running = true;
+
+	int playerCount = 1;
+gameBegin:
+	SDL_Texture* bulletT = IMG_LoadTexture(renderer, "res/bullet.png");
+	Entity firstPlayer;
+	firstPlayer.r.w = 32;
+	firstPlayer.r.h = 32;
+	firstPlayer.r.x = 0;
+	firstPlayer.r.y = 0;
+	firstPlayer.t = IMG_LoadTexture(renderer, "res/player1.png");
+	firstPlayer.speed = PLAYER_SPEED;
+	bool firstPlayerSlowDownOnAccelerationKeyRelease = false;
+	Entity secondPlayer;
+	secondPlayer.r.w = 32;
+	secondPlayer.r.h = 32;
+	secondPlayer.r.x = windowWidth - secondPlayer.r.w;
+	secondPlayer.r.y = 0;
+	secondPlayer.t = IMG_LoadTexture(renderer, "res/player2.png");
+	secondPlayer.speed = PLAYER_SPEED;
+	bool secondPlayerSlowDownOnAccelerationKeyRelease = false;
+	std::vector<Entity> bullets;
+
+	Text pointsTxt;
+	pointsTxt.setText(renderer, robotoF, "0");
+	pointsTxt.adjustSize(0.3, 0.3);
+	pointsTxt.dstR.x = windowWidth / 2 - pointsTxt.dstR.w / 2;
+	pointsTxt.dstR.y = 5;
+
+	/*
+	l-line
+	c-circle
+	k-filled circle
+	p-change color
+	*/
+	std::string movingFile = readWholeFile("res/ruchome.txt");
+	std::string notMovingFile = readWholeFile("res/nieruchome.txt");
+	Objects movingObjects = readObjects(movingFile);
+	Objects notMovingObjects = readObjects(notMovingFile);
+	randomizePositionIfThereIsCollision(movingObjects);
+	randomizePositionIfThereIsCollision(notMovingObjects);
 #if 1 // INIT_MENU_STATE
 	int buttonSplit = 5;
 	Button onePlayerBtn;
@@ -888,75 +1055,77 @@ gameBegin:
 				}
 			}
 #if 1 // NOTE: Reflection from borders
-			float cx = firstPlayer.r.x + firstPlayer.r.w / 2;
-			float cy = firstPlayer.r.y + firstPlayer.r.h / 2;
-			SDL_FPoint leftUpRotatedP = rotatePoint(cx, cy, firstPlayer.angle, { firstPlayer.r.x, firstPlayer.r.y });
-			SDL_FPoint rightUpRotatedP = rotatePoint(cx, cy, firstPlayer.angle, { firstPlayer.r.x + firstPlayer.r.w, firstPlayer.r.y });
-			SDL_FPoint rightDownRotatedP = rotatePoint(cx, cy, firstPlayer.angle, { firstPlayer.r.x + firstPlayer.r.w, firstPlayer.r.y + firstPlayer.r.h });
-			SDL_FPoint leftDownRotatedP = rotatePoint(cx, cy, firstPlayer.angle, { firstPlayer.r.x, firstPlayer.r.y + firstPlayer.r.h });
-			if (leftUpRotatedP.x < 0 || rightUpRotatedP.x < 0 || rightDownRotatedP.x < 0 || leftDownRotatedP.x < 0
-				|| leftUpRotatedP.y < 0 || rightUpRotatedP.y < 0 || rightDownRotatedP.y < 0 || leftDownRotatedP.y < 0
-				|| leftUpRotatedP.x > windowWidth || rightUpRotatedP.x > windowWidth || rightDownRotatedP.x > windowWidth || leftDownRotatedP.x > windowWidth
-				|| leftUpRotatedP.y > windowHeight || rightUpRotatedP.y > windowHeight || rightDownRotatedP.y > windowHeight || leftDownRotatedP.y > windowHeight) {
-				firstPlayer.speed = -firstPlayer.speed;
-				{
-					float highestX = leftUpRotatedP.x;
-					if (rightUpRotatedP.x > highestX) {
-						highestX = rightUpRotatedP.x;
+			{
+				float cx = firstPlayer.r.x + firstPlayer.r.w / 2;
+				float cy = firstPlayer.r.y + firstPlayer.r.h / 2;
+				SDL_FPoint leftUpRotatedP = rotatePoint(cx, cy, firstPlayer.angle, { firstPlayer.r.x, firstPlayer.r.y });
+				SDL_FPoint rightUpRotatedP = rotatePoint(cx, cy, firstPlayer.angle, { firstPlayer.r.x + firstPlayer.r.w, firstPlayer.r.y });
+				SDL_FPoint rightDownRotatedP = rotatePoint(cx, cy, firstPlayer.angle, { firstPlayer.r.x + firstPlayer.r.w, firstPlayer.r.y + firstPlayer.r.h });
+				SDL_FPoint leftDownRotatedP = rotatePoint(cx, cy, firstPlayer.angle, { firstPlayer.r.x, firstPlayer.r.y + firstPlayer.r.h });
+				if (leftUpRotatedP.x < 0 || rightUpRotatedP.x < 0 || rightDownRotatedP.x < 0 || leftDownRotatedP.x < 0
+					|| leftUpRotatedP.y < 0 || rightUpRotatedP.y < 0 || rightDownRotatedP.y < 0 || leftDownRotatedP.y < 0
+					|| leftUpRotatedP.x > windowWidth || rightUpRotatedP.x > windowWidth || rightDownRotatedP.x > windowWidth || leftDownRotatedP.x > windowWidth
+					|| leftUpRotatedP.y > windowHeight || rightUpRotatedP.y > windowHeight || rightDownRotatedP.y > windowHeight || leftDownRotatedP.y > windowHeight) {
+					firstPlayer.speed = -firstPlayer.speed;
+					{
+						float highestX = leftUpRotatedP.x;
+						if (rightUpRotatedP.x > highestX) {
+							highestX = rightUpRotatedP.x;
+						}
+						if (rightDownRotatedP.x > highestX) {
+							highestX = rightDownRotatedP.x;
+						}
+						if (leftDownRotatedP.x > highestX) {
+							highestX = leftDownRotatedP.x;
+						}
+						if (highestX > windowWidth) {
+							firstPlayer.r.x -= firstPlayer.r.w * 3;
+						}
 					}
-					if (rightDownRotatedP.x > highestX) {
-						highestX = rightDownRotatedP.x;
+					{
+						float highestY = leftUpRotatedP.y;
+						if (rightUpRotatedP.y > highestY) {
+							highestY = rightUpRotatedP.y;
+						}
+						if (rightDownRotatedP.y > highestY) {
+							highestY = rightDownRotatedP.y;
+						}
+						if (leftDownRotatedP.y > highestY) {
+							highestY = leftDownRotatedP.y;
+						}
+						if (highestY > windowHeight) {
+							firstPlayer.r.y -= firstPlayer.r.h * 3;
+						}
 					}
-					if (leftDownRotatedP.x > highestX) {
-						highestX = leftDownRotatedP.x;
+					{
+						float lowestX = leftUpRotatedP.x;
+						if (rightUpRotatedP.x < lowestX) {
+							lowestX = rightUpRotatedP.x;
+						}
+						if (rightDownRotatedP.x < lowestX) {
+							lowestX = rightDownRotatedP.x;
+						}
+						if (leftDownRotatedP.x < lowestX) {
+							lowestX = leftDownRotatedP.x;
+						}
+						if (lowestX < 0) {
+							firstPlayer.r.x += firstPlayer.r.w * 3;
+						}
 					}
-					if (highestX > windowWidth) {
-						firstPlayer.r.x -= firstPlayer.r.w * 3;
-					}
-				}
-				{
-					float highestY = leftUpRotatedP.y;
-					if (rightUpRotatedP.y > highestY) {
-						highestY = rightUpRotatedP.y;
-					}
-					if (rightDownRotatedP.y > highestY) {
-						highestY = rightDownRotatedP.y;
-					}
-					if (leftDownRotatedP.y > highestY) {
-						highestY = leftDownRotatedP.y;
-					}
-					if (highestY > windowHeight) {
-						firstPlayer.r.y -= firstPlayer.r.h * 3;
-					}
-				}
-				{
-					float lowestX = leftUpRotatedP.x;
-					if (rightUpRotatedP.x < lowestX) {
-						lowestX = rightUpRotatedP.x;
-					}
-					if (rightDownRotatedP.x < lowestX) {
-						lowestX = rightDownRotatedP.x;
-					}
-					if (leftDownRotatedP.x < lowestX) {
-						lowestX = leftDownRotatedP.x;
-					}
-					if (lowestX < 0) {
-						firstPlayer.r.x += firstPlayer.r.w * 3;
-					}
-				}
-				{
-					float lowestY = leftUpRotatedP.y;
-					if (rightUpRotatedP.y < lowestY) {
-						lowestY = rightUpRotatedP.y;
-					}
-					if (rightDownRotatedP.y < lowestY) {
-						lowestY = rightDownRotatedP.y;
-					}
-					if (leftDownRotatedP.y < lowestY) {
-						lowestY = leftDownRotatedP.y;
-					}
-					if (lowestY < 0) {
-						firstPlayer.r.y += firstPlayer.r.h * 3;
+					{
+						float lowestY = leftUpRotatedP.y;
+						if (rightUpRotatedP.y < lowestY) {
+							lowestY = rightUpRotatedP.y;
+						}
+						if (rightDownRotatedP.y < lowestY) {
+							lowestY = rightDownRotatedP.y;
+						}
+						if (leftDownRotatedP.y < lowestY) {
+							lowestY = leftDownRotatedP.y;
+						}
+						if (lowestY < 0) {
+							firstPlayer.r.y += firstPlayer.r.h * 3;
+						}
 					}
 				}
 			}
@@ -1002,75 +1171,77 @@ gameBegin:
 				}
 			}
 #if 1 // NOTE: Reflection from borders
-			float cx = secondPlayer.r.x + secondPlayer.r.w / 2;
-			float cy = secondPlayer.r.y + secondPlayer.r.h / 2;
-			SDL_FPoint leftUpRotatedP = rotatePoint(cx, cy, secondPlayer.angle, { secondPlayer.r.x, secondPlayer.r.y });
-			SDL_FPoint rightUpRotatedP = rotatePoint(cx, cy, secondPlayer.angle, { secondPlayer.r.x + secondPlayer.r.w, secondPlayer.r.y });
-			SDL_FPoint rightDownRotatedP = rotatePoint(cx, cy, secondPlayer.angle, { secondPlayer.r.x + secondPlayer.r.w, secondPlayer.r.y + secondPlayer.r.h });
-			SDL_FPoint leftDownRotatedP = rotatePoint(cx, cy, secondPlayer.angle, { secondPlayer.r.x, secondPlayer.r.y + secondPlayer.r.h });
-			if (leftUpRotatedP.x < 0 || rightUpRotatedP.x < 0 || rightDownRotatedP.x < 0 || leftDownRotatedP.x < 0
-				|| leftUpRotatedP.y < 0 || rightUpRotatedP.y < 0 || rightDownRotatedP.y < 0 || leftDownRotatedP.y < 0
-				|| leftUpRotatedP.x > windowWidth || rightUpRotatedP.x > windowWidth || rightDownRotatedP.x > windowWidth || leftDownRotatedP.x > windowWidth
-				|| leftUpRotatedP.y > windowHeight || rightUpRotatedP.y > windowHeight || rightDownRotatedP.y > windowHeight || leftDownRotatedP.y > windowHeight) {
-				secondPlayer.speed = -secondPlayer.speed;
-				{
-					float highestX = leftUpRotatedP.x;
-					if (rightUpRotatedP.x > highestX) {
-						highestX = rightUpRotatedP.x;
+			{
+				float cx = secondPlayer.r.x + secondPlayer.r.w / 2;
+				float cy = secondPlayer.r.y + secondPlayer.r.h / 2;
+				SDL_FPoint leftUpRotatedP = rotatePoint(cx, cy, secondPlayer.angle, { secondPlayer.r.x, secondPlayer.r.y });
+				SDL_FPoint rightUpRotatedP = rotatePoint(cx, cy, secondPlayer.angle, { secondPlayer.r.x + secondPlayer.r.w, secondPlayer.r.y });
+				SDL_FPoint rightDownRotatedP = rotatePoint(cx, cy, secondPlayer.angle, { secondPlayer.r.x + secondPlayer.r.w, secondPlayer.r.y + secondPlayer.r.h });
+				SDL_FPoint leftDownRotatedP = rotatePoint(cx, cy, secondPlayer.angle, { secondPlayer.r.x, secondPlayer.r.y + secondPlayer.r.h });
+				if (leftUpRotatedP.x < 0 || rightUpRotatedP.x < 0 || rightDownRotatedP.x < 0 || leftDownRotatedP.x < 0
+					|| leftUpRotatedP.y < 0 || rightUpRotatedP.y < 0 || rightDownRotatedP.y < 0 || leftDownRotatedP.y < 0
+					|| leftUpRotatedP.x > windowWidth || rightUpRotatedP.x > windowWidth || rightDownRotatedP.x > windowWidth || leftDownRotatedP.x > windowWidth
+					|| leftUpRotatedP.y > windowHeight || rightUpRotatedP.y > windowHeight || rightDownRotatedP.y > windowHeight || leftDownRotatedP.y > windowHeight) {
+					secondPlayer.speed = -secondPlayer.speed;
+					{
+						float highestX = leftUpRotatedP.x;
+						if (rightUpRotatedP.x > highestX) {
+							highestX = rightUpRotatedP.x;
+						}
+						if (rightDownRotatedP.x > highestX) {
+							highestX = rightDownRotatedP.x;
+						}
+						if (leftDownRotatedP.x > highestX) {
+							highestX = leftDownRotatedP.x;
+						}
+						if (highestX > windowWidth) {
+							secondPlayer.r.x -= secondPlayer.r.w * 3;
+						}
 					}
-					if (rightDownRotatedP.x > highestX) {
-						highestX = rightDownRotatedP.x;
+					{
+						float highestY = leftUpRotatedP.y;
+						if (rightUpRotatedP.y > highestY) {
+							highestY = rightUpRotatedP.y;
+						}
+						if (rightDownRotatedP.y > highestY) {
+							highestY = rightDownRotatedP.y;
+						}
+						if (leftDownRotatedP.y > highestY) {
+							highestY = leftDownRotatedP.y;
+						}
+						if (highestY > windowHeight) {
+							secondPlayer.r.y -= secondPlayer.r.h * 3;
+						}
 					}
-					if (leftDownRotatedP.x > highestX) {
-						highestX = leftDownRotatedP.x;
+					{
+						float lowestX = leftUpRotatedP.x;
+						if (rightUpRotatedP.x < lowestX) {
+							lowestX = rightUpRotatedP.x;
+						}
+						if (rightDownRotatedP.x < lowestX) {
+							lowestX = rightDownRotatedP.x;
+						}
+						if (leftDownRotatedP.x < lowestX) {
+							lowestX = leftDownRotatedP.x;
+						}
+						if (lowestX < 0) {
+							secondPlayer.r.x += secondPlayer.r.w * 3;
+						}
 					}
-					if (highestX > windowWidth) {
-						secondPlayer.r.x -= secondPlayer.r.w * 3;
-					}
-				}
-				{
-					float highestY = leftUpRotatedP.y;
-					if (rightUpRotatedP.y > highestY) {
-						highestY = rightUpRotatedP.y;
-					}
-					if (rightDownRotatedP.y > highestY) {
-						highestY = rightDownRotatedP.y;
-					}
-					if (leftDownRotatedP.y > highestY) {
-						highestY = leftDownRotatedP.y;
-					}
-					if (highestY > windowHeight) {
-						secondPlayer.r.y -= secondPlayer.r.h * 3;
-					}
-				}
-				{
-					float lowestX = leftUpRotatedP.x;
-					if (rightUpRotatedP.x < lowestX) {
-						lowestX = rightUpRotatedP.x;
-					}
-					if (rightDownRotatedP.x < lowestX) {
-						lowestX = rightDownRotatedP.x;
-					}
-					if (leftDownRotatedP.x < lowestX) {
-						lowestX = leftDownRotatedP.x;
-					}
-					if (lowestX < 0) {
-						secondPlayer.r.x += secondPlayer.r.w * 3;
-					}
-				}
-				{
-					float lowestY = leftUpRotatedP.y;
-					if (rightUpRotatedP.y < lowestY) {
-						lowestY = rightUpRotatedP.y;
-					}
-					if (rightDownRotatedP.y < lowestY) {
-						lowestY = rightDownRotatedP.y;
-					}
-					if (leftDownRotatedP.y < lowestY) {
-						lowestY = leftDownRotatedP.y;
-					}
-					if (lowestY < 0) {
-						secondPlayer.r.y += secondPlayer.r.h * 3;
+					{
+						float lowestY = leftUpRotatedP.y;
+						if (rightUpRotatedP.y < lowestY) {
+							lowestY = rightUpRotatedP.y;
+						}
+						if (rightDownRotatedP.y < lowestY) {
+							lowestY = rightDownRotatedP.y;
+						}
+						if (leftDownRotatedP.y < lowestY) {
+							lowestY = leftDownRotatedP.y;
+						}
+						if (lowestY < 0) {
+							secondPlayer.r.y += secondPlayer.r.h * 3;
+						}
 					}
 				}
 			}
@@ -1103,7 +1274,7 @@ gameBegin:
 					++i;
 				}
 			}
-			for (Line& line : objects.lines) {
+			for (Line& line : movingObjects.lines) {
 				line.x1 += line.dx;
 				line.y1 += line.dy;
 				line.x2 += line.dx;
@@ -1119,170 +1290,18 @@ gameBegin:
 					line.dy = -line.dy;
 				}
 			}
-			for (Circle& circle : objects.circles) {
+			for (Circle& circle : movingObjects.circles) {
 				circle.move();
 			}
-			for (Circle& filledCircle : objects.filledCircles) {
+			for (Circle& filledCircle : movingObjects.filledCircles) {
 				filledCircle.move();
 			}
-#if 1 // NOTE: Bullet - element collision
-			{
-				int i = 0;
-				for (Circle& circle : objects.circles) {
-					SDL_FRect circleR = circleToRect(circle);
-					int j = 0;
-					if (SDL_HasIntersection(&circleR, &firstPlayer.r)) {
-						circle.dx = -circle.dx;
-						circle.dy = -circle.dy;
-
-					}
-					for (Entity& b : bullets) {
-						if (SDL_HasIntersection(&circleR, &b.r)) {
-							bullets.erase(bullets.begin() + j--);
-							if (--circle.energy <= 0) {
-								objects.circles.erase(objects.circles.begin() + i--);
-								int points = std::stoi(pointsTxt.text);
-								++points;
-								pointsTxt.setText(renderer, robotoF, std::to_string(points));
-								break;
-							}
-						}
-						++j;
-					}
-					++i;
-				}
-			}
-			{
-				int i = 0;
-				for (Circle& filledCircle : objects.filledCircles) {
-					SDL_FRect circleR;
-					circleR.w = filledCircle.r * 2;
-					circleR.h = filledCircle.r * 2;
-					circleR.x = filledCircle.x - filledCircle.r;
-					circleR.y = filledCircle.y - filledCircle.r;
-					int j = 0;
-					if (SDL_HasIntersection(&circleR, &firstPlayer.r)) {
-						filledCircle.dx = -filledCircle.dx;
-						filledCircle.dy = -filledCircle.dy;
-					}
-					for (Entity& b : bullets) {
-						if (SDL_HasIntersection(&circleR, &b.r)) {
-							bullets.erase(bullets.begin() + j--);
-							if (--filledCircle.energy <= 0) {
-								objects.filledCircles.erase(objects.filledCircles.begin() + i--);
-								int points = std::stoi(pointsTxt.text);
-								++points;
-								pointsTxt.setText(renderer, robotoF, std::to_string(points));
-								break;
-							}
-						}
-						++j;
-					}
-					++i;
-				}
-			}
-			{
-				int i = 0;
-				for (Line& line : objects.lines) {
-					int j = 0;
-					if (SDL_IntersectRectAndLine(&firstPlayer.r, &line.x1, &line.y1, &line.x2, &line.y2)) {
-						line.dx = -line.dx;
-						line.dy = -line.dy;
-					}
-					for (Entity& b : bullets) {
-						if (SDL_IntersectRectAndLine(&b.r, &line.x1, &line.y1, &line.x2, &line.y2)) {
-							bullets.erase(bullets.begin() + j--);
-							if (--line.energy <= 0) {
-								objects.lines.erase(objects.lines.begin() + i--);
-								int points = std::stoi(pointsTxt.text);
-								++points;
-								pointsTxt.setText(renderer, robotoF, std::to_string(points));
-								break;
-							}
-						}
-						++j;
-					}
-					++i;
-				}
-			}
-#endif
-#if 1 // NOTE: Player-element collision
-			{
-				int i = 0;
-				for (Line& line : objects.lines) {
-					SDL_FRect lineR = lineToFRect(line);
-					if (SDL_HasIntersection(&firstPlayer.r, &lineR)) {
-						if (--line.energy <= 0) {
-							objects.lines.erase(objects.lines.begin() + i--);
-							int points = std::stoi(pointsTxt.text);
-							++points;
-							pointsTxt.setText(renderer, robotoF, std::to_string(points));
-							break;
-						}
-					}
-					if (SDL_HasIntersection(&secondPlayer.r, &lineR)) {
-						if (--line.energy <= 0) {
-							objects.lines.erase(objects.lines.begin() + i--);
-							int points = std::stoi(pointsTxt.text);
-							++points;
-							pointsTxt.setText(renderer, robotoF, std::to_string(points));
-							break;
-						}
-					}
-				}
-			}
-			{
-				int i = 0;
-				for (Circle& circle : objects.circles) {
-					SDL_FRect circleR = circleToRect(circle);
-					if (SDL_HasIntersection(&circleR, &firstPlayer.r)) {
-						if (--circle.energy <= 0) {
-							objects.circles.erase(objects.circles.begin() + i--);
-							int points = std::stoi(pointsTxt.text);
-							++points;
-							pointsTxt.setText(renderer, robotoF, std::to_string(points));
-							break;
-						}
-					}
-					if (SDL_HasIntersection(&circleR, &secondPlayer.r)) {
-						if (--circle.energy <= 0) {
-							objects.circles.erase(objects.circles.begin() + i--);
-							int points = std::stoi(pointsTxt.text);
-							++points;
-							pointsTxt.setText(renderer, robotoF, std::to_string(points));
-							break;
-						}
-					}
-					++i;
-				}
-			}
-			{
-				int i = 0;
-				for (Circle& filledCircle : objects.filledCircles) {
-					SDL_FRect circleR = circleToRect(filledCircle);
-					if (SDL_HasIntersection(&circleR, &firstPlayer.r)) {
-						if (--filledCircle.energy <= 0) {
-							objects.filledCircles.erase(objects.filledCircles.begin() + i--);
-							int points = std::stoi(pointsTxt.text);
-							++points;
-							pointsTxt.setText(renderer, robotoF, std::to_string(points));
-							break;
-						}
-					}
-					if (SDL_HasIntersection(&circleR, &secondPlayer.r)) {
-						if (--filledCircle.energy <= 0) {
-							objects.filledCircles.erase(objects.filledCircles.begin() + i--);
-							int points = std::stoi(pointsTxt.text);
-							++points;
-							pointsTxt.setText(renderer, robotoF, std::to_string(points));
-							break;
-						}
-					}
-					++i;
-				}
-			}
-#endif
-			if (objects.circles.empty() && objects.filledCircles.empty() && objects.lines.empty()) {
+			checkBulletsElementsCollision(movingObjects, bullets, firstPlayer, secondPlayer, pointsTxt, renderer, robotoF);
+			checkBulletsElementsCollision(notMovingObjects, bullets, firstPlayer, secondPlayer, pointsTxt, renderer, robotoF);
+			checkPlayersElementsCollision(movingObjects, bullets, firstPlayer, secondPlayer, pointsTxt, renderer, robotoF);
+			checkPlayersElementsCollision(notMovingObjects, bullets, firstPlayer, secondPlayer, pointsTxt, renderer, robotoF);
+			if (movingObjects.circles.empty() && movingObjects.filledCircles.empty() && movingObjects.lines.empty()
+				&& notMovingObjects.circles.empty() && notMovingObjects.filledCircles.empty() && notMovingObjects.lines.empty()) {
 				goto gameBegin;
 			}
 
@@ -1292,7 +1311,8 @@ gameBegin:
 			if (playerCount == 2) {
 				secondPlayer.draw(renderer);
 			}
-			objects.draw(renderer);
+			movingObjects.draw(renderer);
+			notMovingObjects.draw(renderer);
 			for (Entity& bullet : bullets) {
 				bullet.draw(renderer);
 			}

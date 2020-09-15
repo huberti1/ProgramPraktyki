@@ -101,6 +101,7 @@
     <ClCompile Include="vendor\SDL_gfx\SDL2_rotozoom.c" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="res\nieruchome.txt" />
     <Text Include="res\ruchome.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
