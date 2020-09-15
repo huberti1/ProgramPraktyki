@@ -56,10 +56,12 @@ SDL_Point realMousePos;
 bool keys[SDL_NUM_SCANCODES];
 bool buttons[SDL_BUTTON_X2 + 1];
 
-#define PLAYER_ROTATION_SPEED 0.1
+#define PLAYER_ROTATION_SPEED 0.15
 #define PLAYER_SPEED 0.01
 #define PLAYER_SPEED_INCREASE 0.001
 #define PLAYER_SPEED_LIMIT 1
+#define BULLET_SPEED 1
+#define PLAYER_SHOOT_LATENCY_IN_MS 200
 #define PI 3.14159265358979323846
 
 void logOutputCallback(void* userdata, int category, SDL_LogPriority priority, const char* message)
@@ -934,6 +936,7 @@ gameBegin:
 	firstPlayer.t = IMG_LoadTexture(renderer, "res/player1.png");
 	firstPlayer.speed = PLAYER_SPEED;
 	bool firstPlayerSlowDownOnAccelerationKeyRelease = false;
+	int firstPlayerShootLatencyInMs = 0;
 	Entity secondPlayer;
 	secondPlayer.r.w = 32;
 	secondPlayer.r.h = 32;
@@ -942,6 +945,7 @@ gameBegin:
 	secondPlayer.t = IMG_LoadTexture(renderer, "res/player2.png");
 	secondPlayer.speed = PLAYER_SPEED;
 	bool secondPlayerSlowDownOnAccelerationKeyRelease = false;
+	int secondPlayerShootLatencyInMs = 0;
 	std::vector<Entity> bullets;
 
 	Text pointsTxt;
@@ -1139,10 +1143,12 @@ gameBegin:
 					firstPlayerSlowDownOnAccelerationKeyRelease = false;
 				}
 			}
-			if (keys[SDL_SCANCODE_SPACE]) {
+			if (keys[SDL_SCANCODE_SPACE] && --firstPlayerShootLatencyInMs < 0) {
+				firstPlayerShootLatencyInMs = PLAYER_SHOOT_LATENCY_IN_MS;
 				bullets.push_back(Entity());
 				bullets.back() = firstPlayer;
 				bullets.back().t = bulletT;
+				bullets.back().speed = BULLET_SPEED;
 			}
 #endif
 #if 1 // NOTE: Player 2 code: should be same as player 1 but with other movement
@@ -1255,10 +1261,12 @@ gameBegin:
 					secondPlayerSlowDownOnAccelerationKeyRelease = false;
 				}
 			}
-			if (keys[SDL_SCANCODE_RETURN]) {
+			if (keys[SDL_SCANCODE_RETURN] && --secondPlayerShootLatencyInMs < 0) {
+				secondPlayerShootLatencyInMs = PLAYER_SHOOT_LATENCY_IN_MS;
 				bullets.push_back(Entity());
 				bullets.back() = secondPlayer;
 				bullets.back().t = bulletT;
+				bullets.back().speed = BULLET_SPEED;
 			}
 #endif
 			for (Entity& b : bullets) {
