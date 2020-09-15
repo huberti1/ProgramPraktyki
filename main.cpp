@@ -886,80 +886,81 @@ gameBegin:
 				if (firstPlayer.speed > PLAYER_SPEED_LIMIT) {
 					firstPlayer.speed = PLAYER_SPEED_LIMIT;
 				}
+			}
 #if 1 // NOTE: Reflection from borders
-				float cx = firstPlayer.r.x + firstPlayer.r.w / 2;
-				float cy = firstPlayer.r.y + firstPlayer.r.h / 2;
-				SDL_FPoint leftUpRotatedP = rotatePoint(cx, cy, firstPlayer.angle, { firstPlayer.r.x, firstPlayer.r.y });
-				SDL_FPoint rightUpRotatedP = rotatePoint(cx, cy, firstPlayer.angle, { firstPlayer.r.x + firstPlayer.r.w, firstPlayer.r.y });
-				SDL_FPoint rightDownRotatedP = rotatePoint(cx, cy, firstPlayer.angle, { firstPlayer.r.x + firstPlayer.r.w, firstPlayer.r.y + firstPlayer.r.h });
-				SDL_FPoint leftDownRotatedP = rotatePoint(cx, cy, firstPlayer.angle, { firstPlayer.r.x, firstPlayer.r.y + firstPlayer.r.h });
-				if (leftUpRotatedP.x < 0 || rightUpRotatedP.x < 0 || rightDownRotatedP.x < 0 || leftDownRotatedP.x < 0
-					|| leftUpRotatedP.y < 0 || rightUpRotatedP.y < 0 || rightDownRotatedP.y < 0 || leftDownRotatedP.y < 0
-					|| leftUpRotatedP.x > windowWidth || rightUpRotatedP.x > windowWidth || rightDownRotatedP.x > windowWidth || leftDownRotatedP.x > windowWidth
-					|| leftUpRotatedP.y > windowHeight || rightUpRotatedP.y > windowHeight || rightDownRotatedP.y > windowHeight || leftDownRotatedP.y > windowHeight) {
-					firstPlayer.speed = -firstPlayer.speed;
-					{
-						float highestX = leftUpRotatedP.x;
-						if (rightUpRotatedP.x > highestX) {
-							highestX = rightUpRotatedP.x;
-						}
-						if (rightDownRotatedP.x > highestX) {
-							highestX = rightDownRotatedP.x;
-						}
-						if (leftDownRotatedP.x > highestX) {
-							highestX = leftDownRotatedP.x;
-						}
-						if (highestX > windowWidth) {
-							firstPlayer.r.x -= firstPlayer.r.w * 3;
-						}
+			float cx = firstPlayer.r.x + firstPlayer.r.w / 2;
+			float cy = firstPlayer.r.y + firstPlayer.r.h / 2;
+			SDL_FPoint leftUpRotatedP = rotatePoint(cx, cy, firstPlayer.angle, { firstPlayer.r.x, firstPlayer.r.y });
+			SDL_FPoint rightUpRotatedP = rotatePoint(cx, cy, firstPlayer.angle, { firstPlayer.r.x + firstPlayer.r.w, firstPlayer.r.y });
+			SDL_FPoint rightDownRotatedP = rotatePoint(cx, cy, firstPlayer.angle, { firstPlayer.r.x + firstPlayer.r.w, firstPlayer.r.y + firstPlayer.r.h });
+			SDL_FPoint leftDownRotatedP = rotatePoint(cx, cy, firstPlayer.angle, { firstPlayer.r.x, firstPlayer.r.y + firstPlayer.r.h });
+			if (leftUpRotatedP.x < 0 || rightUpRotatedP.x < 0 || rightDownRotatedP.x < 0 || leftDownRotatedP.x < 0
+				|| leftUpRotatedP.y < 0 || rightUpRotatedP.y < 0 || rightDownRotatedP.y < 0 || leftDownRotatedP.y < 0
+				|| leftUpRotatedP.x > windowWidth || rightUpRotatedP.x > windowWidth || rightDownRotatedP.x > windowWidth || leftDownRotatedP.x > windowWidth
+				|| leftUpRotatedP.y > windowHeight || rightUpRotatedP.y > windowHeight || rightDownRotatedP.y > windowHeight || leftDownRotatedP.y > windowHeight) {
+				firstPlayer.speed = -firstPlayer.speed;
+				{
+					float highestX = leftUpRotatedP.x;
+					if (rightUpRotatedP.x > highestX) {
+						highestX = rightUpRotatedP.x;
 					}
-					{
-						float highestY = leftUpRotatedP.y;
-						if (rightUpRotatedP.y > highestY) {
-							highestY = rightUpRotatedP.y;
-						}
-						if (rightDownRotatedP.y > highestY) {
-							highestY = rightDownRotatedP.y;
-						}
-						if (leftDownRotatedP.y > highestY) {
-							highestY = leftDownRotatedP.y;
-						}
-						if (highestY > windowHeight) {
-							firstPlayer.r.y -= firstPlayer.r.h * 3;
-						}
+					if (rightDownRotatedP.x > highestX) {
+						highestX = rightDownRotatedP.x;
 					}
-					{
-						float lowestX = leftUpRotatedP.x;
-						if (rightUpRotatedP.x < lowestX) {
-							lowestX = rightUpRotatedP.x;
-						}
-						if (rightDownRotatedP.x < lowestX) {
-							lowestX = rightDownRotatedP.x;
-						}
-						if (leftDownRotatedP.x < lowestX) {
-							lowestX = leftDownRotatedP.x;
-						}
-						if (lowestX < 0) {
-							firstPlayer.r.x += firstPlayer.r.w * 3;
-						}
+					if (leftDownRotatedP.x > highestX) {
+						highestX = leftDownRotatedP.x;
 					}
-					{
-						float lowestY = leftUpRotatedP.y;
-						if (rightUpRotatedP.y < lowestY) {
-							lowestY = rightUpRotatedP.y;
-						}
-						if (rightDownRotatedP.y < lowestY) {
-							lowestY = rightDownRotatedP.y;
-						}
-						if (leftDownRotatedP.y < lowestY) {
-							lowestY = leftDownRotatedP.y;
-						}
-						if (lowestY < 0) {
-							firstPlayer.r.y += firstPlayer.r.h * 3;
-						}
+					if (highestX > windowWidth) {
+						firstPlayer.r.x -= firstPlayer.r.w * 3;
+					}
+				}
+				{
+					float highestY = leftUpRotatedP.y;
+					if (rightUpRotatedP.y > highestY) {
+						highestY = rightUpRotatedP.y;
+					}
+					if (rightDownRotatedP.y > highestY) {
+						highestY = rightDownRotatedP.y;
+					}
+					if (leftDownRotatedP.y > highestY) {
+						highestY = leftDownRotatedP.y;
+					}
+					if (highestY > windowHeight) {
+						firstPlayer.r.y -= firstPlayer.r.h * 3;
+					}
+				}
+				{
+					float lowestX = leftUpRotatedP.x;
+					if (rightUpRotatedP.x < lowestX) {
+						lowestX = rightUpRotatedP.x;
+					}
+					if (rightDownRotatedP.x < lowestX) {
+						lowestX = rightDownRotatedP.x;
+					}
+					if (leftDownRotatedP.x < lowestX) {
+						lowestX = leftDownRotatedP.x;
+					}
+					if (lowestX < 0) {
+						firstPlayer.r.x += firstPlayer.r.w * 3;
+					}
+				}
+				{
+					float lowestY = leftUpRotatedP.y;
+					if (rightUpRotatedP.y < lowestY) {
+						lowestY = rightUpRotatedP.y;
+					}
+					if (rightDownRotatedP.y < lowestY) {
+						lowestY = rightDownRotatedP.y;
+					}
+					if (leftDownRotatedP.y < lowestY) {
+						lowestY = leftDownRotatedP.y;
+					}
+					if (lowestY < 0) {
+						firstPlayer.r.y += firstPlayer.r.h * 3;
 					}
 				}
 			}
+#endif
 			if (firstPlayerSlowDownOnAccelerationKeyRelease) {
 				firstPlayer.r.x -= std::sin(firstPlayer.angle * (M_PI / 180)) * firstPlayer.speed;
 				firstPlayer.r.y += std::cos(firstPlayer.angle * (M_PI / 180)) * firstPlayer.speed;
@@ -974,7 +975,6 @@ gameBegin:
 				bullets.back() = firstPlayer;
 				bullets.back().t = bulletT;
 			}
-#endif
 #endif
 #if 1 // NOTE: Player 2 code: should be same as player 1 but with other movement
 			if (keys[SDL_SCANCODE_LEFT]) {
@@ -1000,80 +1000,81 @@ gameBegin:
 				if (secondPlayer.speed > PLAYER_SPEED_LIMIT) {
 					secondPlayer.speed = PLAYER_SPEED_LIMIT;
 				}
+			}
 #if 1 // NOTE: Reflection from borders
-				float cx = secondPlayer.r.x + secondPlayer.r.w / 2;
-				float cy = secondPlayer.r.y + secondPlayer.r.h / 2;
-				SDL_FPoint leftUpRotatedP = rotatePoint(cx, cy, secondPlayer.angle, { secondPlayer.r.x, secondPlayer.r.y });
-				SDL_FPoint rightUpRotatedP = rotatePoint(cx, cy, secondPlayer.angle, { secondPlayer.r.x + secondPlayer.r.w, secondPlayer.r.y });
-				SDL_FPoint rightDownRotatedP = rotatePoint(cx, cy, secondPlayer.angle, { secondPlayer.r.x + secondPlayer.r.w, secondPlayer.r.y + secondPlayer.r.h });
-				SDL_FPoint leftDownRotatedP = rotatePoint(cx, cy, secondPlayer.angle, { secondPlayer.r.x, secondPlayer.r.y + secondPlayer.r.h });
-				if (leftUpRotatedP.x < 0 || rightUpRotatedP.x < 0 || rightDownRotatedP.x < 0 || leftDownRotatedP.x < 0
-					|| leftUpRotatedP.y < 0 || rightUpRotatedP.y < 0 || rightDownRotatedP.y < 0 || leftDownRotatedP.y < 0
-					|| leftUpRotatedP.x > windowWidth || rightUpRotatedP.x > windowWidth || rightDownRotatedP.x > windowWidth || leftDownRotatedP.x > windowWidth
-					|| leftUpRotatedP.y > windowHeight || rightUpRotatedP.y > windowHeight || rightDownRotatedP.y > windowHeight || leftDownRotatedP.y > windowHeight) {
-					secondPlayer.speed = -secondPlayer.speed;
-					{
-						float highestX = leftUpRotatedP.x;
-						if (rightUpRotatedP.x > highestX) {
-							highestX = rightUpRotatedP.x;
-						}
-						if (rightDownRotatedP.x > highestX) {
-							highestX = rightDownRotatedP.x;
-						}
-						if (leftDownRotatedP.x > highestX) {
-							highestX = leftDownRotatedP.x;
-						}
-						if (highestX > windowWidth) {
-							secondPlayer.r.x -= secondPlayer.r.w * 3;
-						}
+			float cx = secondPlayer.r.x + secondPlayer.r.w / 2;
+			float cy = secondPlayer.r.y + secondPlayer.r.h / 2;
+			SDL_FPoint leftUpRotatedP = rotatePoint(cx, cy, secondPlayer.angle, { secondPlayer.r.x, secondPlayer.r.y });
+			SDL_FPoint rightUpRotatedP = rotatePoint(cx, cy, secondPlayer.angle, { secondPlayer.r.x + secondPlayer.r.w, secondPlayer.r.y });
+			SDL_FPoint rightDownRotatedP = rotatePoint(cx, cy, secondPlayer.angle, { secondPlayer.r.x + secondPlayer.r.w, secondPlayer.r.y + secondPlayer.r.h });
+			SDL_FPoint leftDownRotatedP = rotatePoint(cx, cy, secondPlayer.angle, { secondPlayer.r.x, secondPlayer.r.y + secondPlayer.r.h });
+			if (leftUpRotatedP.x < 0 || rightUpRotatedP.x < 0 || rightDownRotatedP.x < 0 || leftDownRotatedP.x < 0
+				|| leftUpRotatedP.y < 0 || rightUpRotatedP.y < 0 || rightDownRotatedP.y < 0 || leftDownRotatedP.y < 0
+				|| leftUpRotatedP.x > windowWidth || rightUpRotatedP.x > windowWidth || rightDownRotatedP.x > windowWidth || leftDownRotatedP.x > windowWidth
+				|| leftUpRotatedP.y > windowHeight || rightUpRotatedP.y > windowHeight || rightDownRotatedP.y > windowHeight || leftDownRotatedP.y > windowHeight) {
+				secondPlayer.speed = -secondPlayer.speed;
+				{
+					float highestX = leftUpRotatedP.x;
+					if (rightUpRotatedP.x > highestX) {
+						highestX = rightUpRotatedP.x;
 					}
-					{
-						float highestY = leftUpRotatedP.y;
-						if (rightUpRotatedP.y > highestY) {
-							highestY = rightUpRotatedP.y;
-						}
-						if (rightDownRotatedP.y > highestY) {
-							highestY = rightDownRotatedP.y;
-						}
-						if (leftDownRotatedP.y > highestY) {
-							highestY = leftDownRotatedP.y;
-						}
-						if (highestY > windowHeight) {
-							secondPlayer.r.y -= secondPlayer.r.h * 3;
-						}
+					if (rightDownRotatedP.x > highestX) {
+						highestX = rightDownRotatedP.x;
 					}
-					{
-						float lowestX = leftUpRotatedP.x;
-						if (rightUpRotatedP.x < lowestX) {
-							lowestX = rightUpRotatedP.x;
-						}
-						if (rightDownRotatedP.x < lowestX) {
-							lowestX = rightDownRotatedP.x;
-						}
-						if (leftDownRotatedP.x < lowestX) {
-							lowestX = leftDownRotatedP.x;
-						}
-						if (lowestX < 0) {
-							secondPlayer.r.x += secondPlayer.r.w * 3;
-						}
+					if (leftDownRotatedP.x > highestX) {
+						highestX = leftDownRotatedP.x;
 					}
-					{
-						float lowestY = leftUpRotatedP.y;
-						if (rightUpRotatedP.y < lowestY) {
-							lowestY = rightUpRotatedP.y;
-						}
-						if (rightDownRotatedP.y < lowestY) {
-							lowestY = rightDownRotatedP.y;
-						}
-						if (leftDownRotatedP.y < lowestY) {
-							lowestY = leftDownRotatedP.y;
-						}
-						if (lowestY < 0) {
-							secondPlayer.r.y += secondPlayer.r.h * 3;
-						}
+					if (highestX > windowWidth) {
+						secondPlayer.r.x -= secondPlayer.r.w * 3;
+					}
+				}
+				{
+					float highestY = leftUpRotatedP.y;
+					if (rightUpRotatedP.y > highestY) {
+						highestY = rightUpRotatedP.y;
+					}
+					if (rightDownRotatedP.y > highestY) {
+						highestY = rightDownRotatedP.y;
+					}
+					if (leftDownRotatedP.y > highestY) {
+						highestY = leftDownRotatedP.y;
+					}
+					if (highestY > windowHeight) {
+						secondPlayer.r.y -= secondPlayer.r.h * 3;
+					}
+				}
+				{
+					float lowestX = leftUpRotatedP.x;
+					if (rightUpRotatedP.x < lowestX) {
+						lowestX = rightUpRotatedP.x;
+					}
+					if (rightDownRotatedP.x < lowestX) {
+						lowestX = rightDownRotatedP.x;
+					}
+					if (leftDownRotatedP.x < lowestX) {
+						lowestX = leftDownRotatedP.x;
+					}
+					if (lowestX < 0) {
+						secondPlayer.r.x += secondPlayer.r.w * 3;
+					}
+				}
+				{
+					float lowestY = leftUpRotatedP.y;
+					if (rightUpRotatedP.y < lowestY) {
+						lowestY = rightUpRotatedP.y;
+					}
+					if (rightDownRotatedP.y < lowestY) {
+						lowestY = rightDownRotatedP.y;
+					}
+					if (leftDownRotatedP.y < lowestY) {
+						lowestY = leftDownRotatedP.y;
+					}
+					if (lowestY < 0) {
+						secondPlayer.r.y += secondPlayer.r.h * 3;
 					}
 				}
 			}
+#endif
 			if (secondPlayerSlowDownOnAccelerationKeyRelease) {
 				secondPlayer.r.x -= std::sin(secondPlayer.angle * (M_PI / 180)) * secondPlayer.speed;
 				secondPlayer.r.y += std::cos(secondPlayer.angle * (M_PI / 180)) * secondPlayer.speed;
@@ -1088,7 +1089,6 @@ gameBegin:
 				bullets.back() = secondPlayer;
 				bullets.back().t = bulletT;
 			}
-#endif
 #endif
 			for (Entity& b : bullets) {
 				b.r.x -= std::sin(b.angle * (M_PI / 180)) * b.speed;
