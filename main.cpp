@@ -744,11 +744,6 @@ void checkBulletsElementsCollision(Objects& objects, std::vector<Entity>& bullet
 		for (Circle& circle : objects.circles) {
 			SDL_FRect circleR = circleToRect(circle);
 			int j = 0;
-			if (SDL_HasIntersection(&circleR, &firstPlayer.r)) {
-				circle.dx = -circle.dx;
-				circle.dy = -circle.dy;
-
-			}
 			for (Entity& b : bullets) {
 				if (SDL_HasIntersection(&circleR, &b.r)) {
 					bullets.erase(bullets.begin() + j--);
@@ -774,10 +769,6 @@ void checkBulletsElementsCollision(Objects& objects, std::vector<Entity>& bullet
 			circleR.x = filledCircle.x - filledCircle.r;
 			circleR.y = filledCircle.y - filledCircle.r;
 			int j = 0;
-			if (SDL_HasIntersection(&circleR, &firstPlayer.r)) {
-				filledCircle.dx = -filledCircle.dx;
-				filledCircle.dy = -filledCircle.dy;
-			}
 			for (Entity& b : bullets) {
 				if (SDL_HasIntersection(&circleR, &b.r)) {
 					bullets.erase(bullets.begin() + j--);
@@ -798,10 +789,7 @@ void checkBulletsElementsCollision(Objects& objects, std::vector<Entity>& bullet
 		int i = 0;
 		for (Line& line : objects.lines) {
 			int j = 0;
-			if (SDL_IntersectRectAndLine(&firstPlayer.r, &line.x1, &line.y1, &line.x2, &line.y2)) {
-				line.dx = -line.dx;
-				line.dy = -line.dy;
-			}
+
 			for (Entity& b : bullets) {
 				if (SDL_IntersectRectAndLine(&b.r, &line.x1, &line.y1, &line.x2, &line.y2)) {
 					bullets.erase(bullets.begin() + j--);
@@ -822,26 +810,60 @@ void checkBulletsElementsCollision(Objects& objects, std::vector<Entity>& bullet
 
 void checkPlayersElementsCollision(Objects& objects, std::vector<Entity>& bullets, Entity& firstPlayer, Entity& secondPlayer, Text& pointsTxt, SDL_Renderer* renderer, TTF_Font* robotoF)
 {
-	{
+	{	
 		int i = 0;
 		for (Line& line : objects.lines) {
 			SDL_FRect lineR = lineToFRect(line);
 			if (SDL_HasIntersection(&firstPlayer.r, &lineR)) {
-				if (--line.energy <= 0) {
-					objects.lines.erase(objects.lines.begin() + i--);
-					int points = std::stoi(pointsTxt.text);
-					++points;
-					pointsTxt.setText(renderer, robotoF, std::to_string(points));
-					break;
+			 {
+					if (firstPlayer.r.y <= lineR.y - (lineR.h / 2))
+					{
+						firstPlayer.r.y -= firstPlayer.r.h / 2;
+					}
+					if (firstPlayer.r.y >= lineR.y + (lineR.h / 2))
+					{
+						firstPlayer.r.y += firstPlayer.r.h / 2;
+					}
+					if (firstPlayer.r.x < lineR.x)
+					{
+						firstPlayer.r.x -= firstPlayer.r.w / 2;
+					}
+					if (firstPlayer.r.x > lineR.x)
+					{
+						firstPlayer.r.x += firstPlayer.r.w / 2;
+					}
+					if (firstPlayer.speed >= 0.1)
+					{
+						firstPlayer.speed -= 0.1;
+					}
+					line.dx = -line.dx;
+					line.dy = -line.dy;
 				}
 			}
 			if (SDL_HasIntersection(&secondPlayer.r, &lineR)) {
-				if (--line.energy <= 0) {
-					objects.lines.erase(objects.lines.begin() + i--);
-					int points = std::stoi(pointsTxt.text);
-					++points;
-					pointsTxt.setText(renderer, robotoF, std::to_string(points));
-					break;
+				  {
+					if (secondPlayer.r.y <= lineR.y - (lineR.h / 2))
+					{
+						secondPlayer.r.y -= secondPlayer.r.h / 2;
+					}
+					if (secondPlayer.r.y >= lineR.y + (lineR.h / 2))
+					{
+						secondPlayer.r.y += secondPlayer.r.h / 2;
+					}
+					if (secondPlayer.r.x < lineR.x)
+					{
+						secondPlayer.r.x -= secondPlayer.r.w / 2;
+					}
+					if (secondPlayer.r.x > lineR.x)
+					{
+						secondPlayer.r.x += secondPlayer.r.w / 2;
+					}
+					if (firstPlayer.speed >= 0.1)
+					{
+						firstPlayer.speed -= 0.1;
+					}
+					line.dx = -line.dx;
+					line.dy = -line.dy;
 				}
 			}
 		}
@@ -850,23 +872,53 @@ void checkPlayersElementsCollision(Objects& objects, std::vector<Entity>& bullet
 		int i = 0;
 		for (Circle& circle : objects.circles) {
 			SDL_FRect circleR = circleToRect(circle);
-			if (SDL_HasIntersection(&circleR, &firstPlayer.r)) {
-				if (--circle.energy <= 0) {
-					objects.circles.erase(objects.circles.begin() + i--);
-					int points = std::stoi(pointsTxt.text);
-					++points;
-					pointsTxt.setText(renderer, robotoF, std::to_string(points));
-					break;
+			if (SDL_HasIntersection(&firstPlayer.r ,&circleR)) {
+				if (firstPlayer.r.y <= circleR.y - (circleR.h / 2))
+				{
+					firstPlayer.r.y -= firstPlayer.r.h / 2;
 				}
+				if (firstPlayer.r.y >= circleR.y + (circleR.h / 2))
+				{
+					firstPlayer.r.y += firstPlayer.r.h / 2;
+				}
+				if (firstPlayer.r.x < circleR.x)
+				{
+					firstPlayer.r.x -= firstPlayer.r.w / 2;
+				}
+				if (firstPlayer.r.x > circleR.x)
+				{
+					firstPlayer.r.x += firstPlayer.r.w / 2;
+				}
+				if (firstPlayer.speed >= 0.1)
+				{
+					firstPlayer.speed -= 0.1;
+				}
+				circle.dx = -circle.dx;
+				circle.dy = -circle.dy;
 			}
-			if (SDL_HasIntersection(&circleR, &secondPlayer.r)) {
-				if (--circle.energy <= 0) {
-					objects.circles.erase(objects.circles.begin() + i--);
-					int points = std::stoi(pointsTxt.text);
-					++points;
-					pointsTxt.setText(renderer, robotoF, std::to_string(points));
-					break;
+			if (SDL_HasIntersection(&secondPlayer.r ,&circleR)) {
+				if (firstPlayer.r.y <= circleR.y - (circleR.h / 2))
+				{
+					firstPlayer.r.y -= firstPlayer.r.h / 2;
 				}
+				if (firstPlayer.r.y >= circleR.y + (circleR.h / 2))
+				{
+					firstPlayer.r.y += firstPlayer.r.h / 2;
+				}
+				if (firstPlayer.r.x < circleR.x)
+				{
+					firstPlayer.r.x -= firstPlayer.r.w / 2;
+				}
+				if (firstPlayer.r.x > circleR.x)
+				{
+					firstPlayer.r.x += firstPlayer.r.w / 2;
+				}
+				if (firstPlayer.speed >= 0.1)
+				{
+					firstPlayer.speed -= 0.1;
+				}
+				circle.dx = -circle.dx;
+				circle.dy = -circle.dy;
 			}
 			++i;
 		}
@@ -875,23 +927,53 @@ void checkPlayersElementsCollision(Objects& objects, std::vector<Entity>& bullet
 		int i = 0;
 		for (Circle& filledCircle : objects.filledCircles) {
 			SDL_FRect circleR = circleToRect(filledCircle);
-			if (SDL_HasIntersection(&circleR, &firstPlayer.r)) {
-				if (--filledCircle.energy <= 0) {
-					objects.filledCircles.erase(objects.filledCircles.begin() + i--);
-					int points = std::stoi(pointsTxt.text);
-					++points;
-					pointsTxt.setText(renderer, robotoF, std::to_string(points));
-					break;
+			if (SDL_HasIntersection(&firstPlayer.r , &circleR)) {
+				if (firstPlayer.r.y <= circleR.y - (circleR.h / 2))
+				{
+					firstPlayer.r.y -= firstPlayer.r.h / 2;
 				}
+				if (firstPlayer.r.y >= circleR.y + (circleR.h / 2))
+				{
+					firstPlayer.r.y += firstPlayer.r.h / 2;
+				}
+				if (firstPlayer.r.x < circleR.x)
+				{
+					firstPlayer.r.x -= firstPlayer.r.w / 2;
+				}
+				if (firstPlayer.r.x > circleR.x)
+				{
+					firstPlayer.r.x += firstPlayer.r.w / 2;
+				}
+				if (firstPlayer.speed >= 0.1)
+				{
+					firstPlayer.speed -= 0.1;
+				}
+				filledCircle.dx = -filledCircle.dx;
+				filledCircle.dy = -filledCircle.dy;
 			}
-			if (SDL_HasIntersection(&circleR, &secondPlayer.r)) {
-				if (--filledCircle.energy <= 0) {
-					objects.filledCircles.erase(objects.filledCircles.begin() + i--);
-					int points = std::stoi(pointsTxt.text);
-					++points;
-					pointsTxt.setText(renderer, robotoF, std::to_string(points));
-					break;
+			if (SDL_HasIntersection (&secondPlayer.r, &circleR)) {
+				if (firstPlayer.r.y <= circleR.y - (circleR.h / 2))
+				{
+					firstPlayer.r.y -= firstPlayer.r.h / 2;
 				}
+				if (firstPlayer.r.y >= circleR.y + (circleR.h / 2))
+				{
+					firstPlayer.r.y += firstPlayer.r.h / 2;
+				}
+				if (firstPlayer.r.x < circleR.x)
+				{
+					firstPlayer.r.x -= firstPlayer.r.w / 2;
+				}
+				if (firstPlayer.r.x > circleR.x)
+				{
+					firstPlayer.r.x += firstPlayer.r.w / 2;
+				}
+				if (firstPlayer.speed >= 0.1)
+				{
+					firstPlayer.speed -= 0.1;
+				}
+				filledCircle.dx = -filledCircle.dx;
+				filledCircle.dy = -filledCircle.dy;
 			}
 			++i;
 		}
@@ -906,15 +988,13 @@ int main(int argc, char* argv[])
 	SDL_Init(SDL_INIT_EVERYTHING);
 	TTF_Init();
 	SDL_GetMouseState(&mousePos.x, &mousePos.y);
-#if 0 // TODO: Remember to turn it off on reelase
-	SDL_Window * window = SDL_CreateWindow("ProgramPraktyki", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, windowWidth, windowHeight, SDL_WINDOW_RESIZABLE);
-#else
+
 	SDL_Window* window = SDL_CreateWindow("ProgramPraktyki", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, windowWidth, windowHeight, SDL_WINDOW_RESIZABLE | SDL_WINDOW_FULLSCREEN_DESKTOP);
 	SDL_DisplayMode dm;
 	SDL_GetCurrentDisplayMode(0, &dm);
 	windowWidth = dm.w;
 	windowHeight = dm.h;
-#endif
+
 	SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 	TTF_Font* robotoF = TTF_OpenFont("res/roboto.ttf", 72);
 	int w, h;
@@ -943,7 +1023,7 @@ gameBegin:
 	secondPlayer.speed = PLAYER_SPEED;
 	bool secondPlayerSlowDownOnAccelerationKeyRelease = false;
 	std::vector<Entity> bullets;
-
+	int firstPlayerTimeBeforeShot = 0, secondPlayerTimeBeforeShot = 0;
 	Text pointsTxt;
 	pointsTxt.setText(renderer, robotoF, "0");
 	pointsTxt.adjustSize(0.3, 0.3);
@@ -1140,9 +1220,14 @@ gameBegin:
 				}
 			}
 			if (keys[SDL_SCANCODE_SPACE]) {
-				bullets.push_back(Entity());
-				bullets.back() = firstPlayer;
-				bullets.back().t = bulletT;
+				time_t seconds = time(nullptr);
+				if (firstPlayerTimeBeforeShot < seconds)
+				{
+					bullets.push_back(Entity());
+					bullets.back() = firstPlayer;
+					bullets.back().t = bulletT;
+					firstPlayerTimeBeforeShot = seconds + 0.5;
+				}
 			}
 #endif
 #if 1 // NOTE: Player 2 code: should be same as player 1 but with other movement
@@ -1256,9 +1341,14 @@ gameBegin:
 				}
 			}
 			if (keys[SDL_SCANCODE_RETURN]) {
-				bullets.push_back(Entity());
-				bullets.back() = secondPlayer;
-				bullets.back().t = bulletT;
+				time_t seconds = time(nullptr);
+				if (secondPlayerTimeBeforeShot < seconds)
+				{
+					bullets.push_back(Entity());
+					bullets.back() = firstPlayer;
+					bullets.back().t = bulletT;
+					firstPlayerTimeBeforeShot = seconds + 0.1;
+				};
 			}
 #endif
 			for (Entity& b : bullets) {
